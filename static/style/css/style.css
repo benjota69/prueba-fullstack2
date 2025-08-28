@@ -1,0 +1,226 @@
+:root {
+    --primary-color: #2e7d32; /* verde medio oscuro */
+    --primary-color-600: #276a2b;
+    --primary-contrast: #ffffff;
+    --sidebar-bg: #1f2d27; /* fondo principal sidebar */
+    --sidebar-bg-2: #24372f; /* header/footer sidebar */
+    --sidebar-border: #2f4a40;
+    --danger-color: #d32f2f;
+    --auth-bg: #e8f3ec; /* verde muy claro para fondo auth */
+    --muted-text: #2b3b35;
+}
+
+/* Sidebar simple */
+.sidebar {
+    width: 250px;
+    background-color: var(--sidebar-bg);
+    color: white;
+    padding: 0;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    padding: 20px;
+    text-align: center;
+    background-color: var(--sidebar-bg-2);
+    border-bottom: 1px solid var(--sidebar-border);
+}
+
+.sidebar-header i {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+.sidebar-header h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+/* Menú del sidebar */
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.sidebar-menu li {
+    margin-bottom: 5px;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: #bdc3c7;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    border-radius: 8px;
+    margin: 0 10px;
+}
+
+.sidebar-menu a:hover {
+    background-color: #2a3f36;
+    color: white;
+}
+
+.sidebar-menu li.active a {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.sidebar-menu i {
+    margin-right: 10px;
+    width: 16px;
+    text-align: center;
+}
+
+/* Footer del sidebar */
+.sidebar-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 20px;
+    background-color: var(--sidebar-bg-2);
+    border-top: 1px solid var(--sidebar-border);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    color: #bdc3c7;
+}
+
+.user-info i {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.logout-btn {
+    width: 100%;
+    padding: 8px;
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #c62828;
+}
+
+.main-content {
+    margin-left: 250px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Auth (login/registro) */
+.auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: var(--auth-bg);
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 360px;
+    border: 1px solid #e0e7e3;
+    border-radius: 10px;
+    box-shadow: 0 6px 24px rgba(20, 60, 40, 0.08);
+    background: #ffffff;
+}
+
+.auth-card .nav-pills .nav-link {
+    padding: 6px 10px;
+    color: var(--muted-text);
+}
+
+.auth-card .form-control.form-control-sm {
+    padding: 8px 10px;
+}
+
+.auth-card .btn {
+    padding: 8px 10px;
+    color: var(--primary-contrast);
+}
+
+.auth-card .nav-pills .nav-link.active {
+    background-color: var(--primary-color);
+    color: var(--primary-contrast);
+}
+
+.auth-subtitle {
+    color: #3a5a4b;
+    font-size: 0.9rem;
+}
+
+/* Botones primarios y success en tonos verdes, sin azul */
+.btn-primary {
+    /* Forzar paleta en todos los estados de Bootstrap */
+    --bs-btn-color: var(--primary-contrast);
+    --bs-btn-bg: var(--primary-color);
+    --bs-btn-border-color: var(--primary-color);
+    --bs-btn-hover-color: var(--primary-contrast);
+    --bs-btn-hover-bg: var(--primary-color-600);
+    --bs-btn-hover-border-color: var(--primary-color-600);
+    --bs-btn-focus-shadow-rgb: 46, 125, 50;
+    --bs-btn-active-color: var(--primary-contrast);
+    --bs-btn-active-bg: var(--primary-color-600);
+    --bs-btn-active-border-color: var(--primary-color-600);
+    --bs-btn-disabled-bg: var(--primary-color);
+    --bs-btn-disabled-border-color: var(--primary-color);
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--primary-contrast);
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary:focus-visible,
+.btn-check:checked + .btn-primary,
+.btn-check:active + .btn-primary {
+    background-color: var(--primary-color-600);
+    border-color: var(--primary-color-600);
+    color: var(--primary-contrast);
+}
+.btn-success {
+    background-color: #2e8740;
+    border-color: #2e8740;
+    color: var(--primary-contrast);
+}
+.btn-success:hover,
+.btn-success:focus {
+    background-color: #2a7839;
+    border-color: #2a7839;
+    color: var(--primary-contrast);
+}
+
+/* Inputs y focus en verde, eliminar azul */
+.form-control:focus,
+.form-check-input:focus,
+.btn:focus {
+    box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
+    border-color: var(--primary-color);
+}
+
+/* Links en verde y más suaves */
+a,
+.auth-card a {
+    color: #2f6b4a;
+}
+.auth-card a:hover {
+    color: #24533a;
+}
