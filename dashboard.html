@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="static/style/css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-balance-scale"></i>
+                <h2>BalanceUp</h2>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li class="active">
+                    <a href="dashboard.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="transactions.html">
+                        <i class="fas fa-exchange-alt"></i>
+                        Transacciones
+                    </a>
+                </li>
+                <li>
+                    <a href="goals.html">
+                        <i class="fas fa-bullseye"></i>
+                        Metas de Ahorro
+                    </a>
+                </li>
+                <li>
+                    <a href="card-simulator.html">
+                        <i class="fas fa-credit-card"></i>
+                        Simulador de Compras
+                    </a>
+                </li>
+                <li>
+                    <a href="analytics.html">
+                        <i class="fas fa-chart-bar"></i>
+                        Análisis
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="userName">Usuario</span>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Cerrar Sesión
+                </button>
+            </div>
+        </nav>
+
+        <main class="page-content">
+            <div class="container-fluid">
+                <div class="d-flex align-items-baseline justify-content-between mb-3">
+                    <div class="dash-title">
+                        <h1 class="h4 mb-0">Dashboard</h1>
+                    </div>
+                    <div class="text-end">
+                        <span class="text-muted">Hola, <strong id="dashUserName">Usuario</strong></span>
+                    </div>
+                </div>
+
+                <div class="text-center mb-3">
+                    <div class="dash-subtitle">
+                        <span class="text-muted">Resumen rápido</span>
+                    </div>
+                </div>
+
+                <div class="dash-cards mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="small text-muted">Balance</div>
+                            <div class="fs-5" id="balanceAmount">$0</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="small text-muted">Ingresos</div>
+                            <div class="fs-5 text-success" id="incomeAmount">$0</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="small text-muted">Gastos</div>
+                            <div class="fs-5 text-danger" id="expenseAmount">$0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráficos bonitos e interactivos -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Distribución de Gastos</h5>
+                                <div class="donut-chart-container">
+                                    <div class="donut-chart" id="donutChart">
+                                        <div class="donut-segment" data-value="40" data-label="Comida" style="--color: #FF6B6B;"></div>
+                                        <div class="donut-segment" data-value="25" data-label="Transporte" style="--color: #4ECDC4;"></div>
+                                        <div class="donut-segment" data-value="20" data-label="Entretenimiento" style="--color: #45B7D1;"></div>
+                                        <div class="donut-segment" data-value="15" data-label="Otros" style="--color: #96CEB4;"></div>
+                                    </div>
+                                    <div class="donut-center">
+                                        <div class="donut-total">100%</div>
+                                        <div class="donut-label">Total</div>
+                                    </div>
+                                </div>
+                                <div class="donut-legend mt-3" id="donutLegend"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Metas Completadas</h5>
+                                <div class="goals-container">
+                                    <div class="goal-item" data-goal="ahorro" data-progress="75">
+                                        <div class="goal-icon">💰</div>
+                                        <div class="goal-info">
+                                            <div class="goal-name">Ahorro Mensual</div>
+                                            <div class="goal-progress">
+                                                <div class="progress-bar-small">
+                                                    <div class="progress-fill-small" style="width: 75%"></div>
+                                                </div>
+                                                <span class="goal-percentage">75%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="goal-item" data-goal="gastos" data-progress="60">
+                                        <div class="goal-icon">📊</div>
+                                        <div class="goal-info">
+                                            <div class="goal-name">Control de Gastos</div>
+                                            <div class="goal-progress">
+                                                <div class="progress-bar-small">
+                                                    <div class="progress-fill-small" style="width: 60%"></div>
+                                                </div>
+                                                <span class="goal-percentage">60%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="goal-item" data-goal="inversion" data-progress="90">
+                                        <div class="goal-icon">📈</div>
+                                        <div class="goal-info">
+                                            <div class="goal-name">Inversión</div>
+                                            <div class="goal-progress">
+                                                <div class="progress-bar-small">
+                                                    <div class="progress-fill-small" style="width: 90%"></div>
+                                                </div>
+                                                <span class="goal-percentage">90%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="goal-item" data-goal="emergencia" data-progress="45">
+                                        <div class="goal-icon">🛡️</div>
+                                        <div class="goal-info">
+                                            <div class="goal-name">Fondo de Emergencia</div>
+                                            <div class="goal-progress">
+                                                <div class="progress-bar-small">
+                                                    <div class="progress-fill-small" style="width: 45%"></div>
+                                                </div>
+                                                <span class="goal-percentage">45%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="goals-summary mt-3">
+                                    <small class="text-muted">Haz clic en cada meta para ver detalles</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card dash-transactions">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <h2 class="h6 mb-0 dash-section-title">Últimas transacciones</h2>
+                            <a class="small text-decoration-none dash-link" href="#">Ver todo</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Descripción</th>
+                                        <th class="text-end">Monto</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lastTxBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        function logout(){
+            try { localStorage.removeItem('demo_logged_in'); } catch(err) {}
+            window.location.href = 'login.html';
+        }
+    </script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
+
+
