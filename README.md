@@ -57,5 +57,3 @@ Está pensada especialmente para **estudiantes, trabajadores y pequeños emprend
 Cada servicio tiene su propia base de datos en MySQL para mantener la independencia.
 
 ---
-
-## 📂 Estructura (ejemplo de carpetas)
