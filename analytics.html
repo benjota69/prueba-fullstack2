@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Análisis Financiero - BalanceUp</title>
+    <link rel="stylesheet" href="static/style/css/style.css">
+
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <!-- Botón de dark mode -->
+            <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Cambiar modo oscuro">
+                <span class="sun-icon">☀️</span>
+                <span class="moon-icon">🌙</span>
+            </button>
+            
+            <div class="sidebar-header">
+                <span>⚖️</span>
+                <h2>BalanceUp</h2>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="dashboard.html">
+                        <span>📊</span>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="transactions.html">
+                        <span>💱</span>
+                        Transacciones
+                    </a>
+                </li>
+                <li>
+                    <a href="goals.html">
+                        <span>🎯</span>
+                        Metas de Ahorro
+                    </a>
+                </li>
+                <li>
+                    <a href="payment-methods.html">
+                        <span>💳</span>
+                        Métodos de Pago
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="analytics.html">
+                        <span>📈</span>
+                        Análisis
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <span>👤</span>
+                    <span id="userName">Usuario</span>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <span>🚪</span>
+                    Cerrar Sesión
+                </button>
+            </div>
+        </nav>
+
+        <!-- Contenido principal -->
+        <div class="page-content">
+            <!-- Header del módulo -->
+            <div class="analytics-header">
+                <div class="analytics-title-section">
+                    <div class="analytics-icon">
+                        <span>📊</span>
+                    </div>
+                    <div class="analytics-text">
+                        <h1 class="analytics-main-title">Análisis Financiero</h1>
+                        <p class="analytics-subtitle">Visualiza y analiza tus patrones de gasto</p>
+                    </div>
+                </div>
+                <div class="analytics-filter">
+                    <select class="form-select month-filter" id="monthFilter">
+                        <option value="1">Enero</option>
+                        <option value="2">Febrero</option>
+                        <option value="3">Marzo</option>
+                        <option value="4">Abril</option>
+                        <option value="5">Mayo</option>
+                        <option value="6">Junio</option>
+                        <option value="7">Julio</option>
+                        <option value="8">Agosto</option>
+                        <option value="9">Septiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Tarjetas de resumen -->
+            <div class="analytics-summary-cards">
+                <div class="summary-card">
+                    <div class="card-icon">
+                        <span class="text-success">📈</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-value">$2,450</h3>
+                        <p class="card-label">Ingresos del Mes</p>
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <div class="card-icon">
+                        <span class="text-danger">📉</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-value">$1,890</h3>
+                        <p class="card-label">Gastos del Mes</p>
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <div class="card-icon">
+                        <span class="text-primary">🐷</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-value">$560</h3>
+                        <p class="card-label">Ahorro del Mes</p>
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <div class="card-icon">
+                        <span class="text-info">%</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-value">22.9%</h3>
+                        <p class="card-label">Tasa de Ahorro</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráficos y análisis -->
+            <div class="analytics-charts-section">
+                <div class="row">
+                    <!-- Gráfico de gastos por categoría -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="chart-card">
+                            <h3 class="chart-title">Gastos por Categoría</h3>
+                            <div class="donut-chart-container">
+                                <div class="donut-chart"></div>
+                                <div class="donut-center">
+                                    <div class="donut-total">$1,890</div>
+                                    <div class="donut-label">Total Gastos</div>
+                                </div>
+                            </div>
+                            <div class="donut-legend">
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #FF6B6B;"></div>
+                                    <span>Alimentación</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #4ECDC4;"></div>
+                                    <span>Transporte</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #45B7D1;"></div>
+                                    <span>Entretenimiento</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #96CEB4;"></div>
+                                    <span>Otros</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico de tendencias mensuales -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="chart-card">
+                            <h3 class="chart-title">Tendencia de Gastos</h3>
+                            <div class="trend-chart-container">
+                                <canvas id="trendChart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Análisis de patrones -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="analysis-card">
+                            <h3 class="analysis-title">Análisis de Patrones</h3>
+                            <div class="pattern-insights">
+                                <div class="insight-item">
+                                    <div class="insight-icon">
+                                        <span class="text-warning">💡</span>
+                                    </div>
+                                    <div class="insight-content">
+                                        <h4>Mayor Gasto: Alimentación</h4>
+                                        <p>El 35% de tus gastos van a alimentación. Considera revisar opciones más económicas o cocinar en casa.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="insight-item">
+                                    <div class="insight-icon">
+                                        <span class="text-success">📈</span>
+                                    </div>
+                                    <div class="insight-content">
+                                        <h4>Tendencia Positiva</h4>
+                                        <p>Tu tasa de ahorro ha mejorado un 15% comparado con el mes anterior.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="insight-item">
+                                    <div class="insight-icon">
+                                        <span class="text-warning">⚠️</span>
+                                    </div>
+                                    <div class="insight-content">
+                                        <h4>Gasto Inusual</h4>
+                                        <p>Detectamos un gasto inusual en entretenimiento. Revisa si fue necesario.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/darkMode.js"></script>
+    <script src="js/analytics.js"></script>
+    <script>
+        function logout(){
+            try { localStorage.removeItem('demo_logged_in'); } catch(err) {}
+            window.location.href = 'login.html';
+        }
+        
+        // Protección mínima de demo
+        (function(){
+            try {
+                var logged = localStorage.getItem('demo_logged_in');
+                if (!logged) {
+                    window.location.href = 'login.html';
+                }
+            } catch(err) {}
+        })();
+
+        // Actualizar nombre del usuario en el sidebar
+        function updateUserName() {
+            try {
+                var userName = localStorage.getItem('app_user_name') || 'Usuario';
+                var userNameElement = document.getElementById('userName');
+                if (userNameElement) {
+                    userNameElement.textContent = userName;
+                }
+            } catch(err) {
+                console.error('Error al cargar nombre de usuario:', err);
+            }
+        }
+
+        // Cargar datos al iniciar
+        document.addEventListener('DOMContentLoaded', function() {
+            updateUserName();
+        });
+    </script>
+</body>
+</html>

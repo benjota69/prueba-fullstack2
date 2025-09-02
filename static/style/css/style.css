@@ -8,9 +8,38 @@
     --danger-color: #d32f2f;
     --auth-bg: #e8f3ec; /* verde muy claro para fondo auth */
     --muted-text: #2b3b35;
+    
+    /* Variables para light mode */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --text-primary: #2c3e50;
+    --text-secondary: #6c757d;
+    --card-bg: #ffffff;
+    --border-color: #e9ecef;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --hover-bg: #f8f9fa;
 }
 
-/* Sidebar simple */
+/* Dark mode variables */
+[data-theme="dark"] {
+    --bg-primary: #2a2a2a; /* Gris más claro en lugar de negro puro */
+    --bg-secondary: #3a3a3a; /* Gris medio para elementos secundarios */
+    --text-primary: #ffffff; /* Texto principal en blanco puro */
+    --text-secondary: #e0e0e0; /* Texto secundario más claro */
+    --card-bg: #3a3a3a; /* Fondo de tarjetas en gris medio */
+    --border-color: #555555; /* Bordes más visibles */
+    --shadow-color: rgba(0, 0, 0, 0.4);
+    --hover-bg: #4a4a4a; /* Hover más visible */
+}
+
+/* estilos generales */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+/* barra lateral */
 .sidebar {
     width: 250px;
     background-color: var(--sidebar-bg);
@@ -36,10 +65,11 @@
 
 .sidebar-header h2 {
     margin: 0;
-    font-size: 20px;
+    font-size: 1.25rem; /* h5 de Bootstrap */
+    font-weight: 600; /* fw-semibold de Bootstrap */
 }
 
-/* Menú del sidebar */
+/* menu de navegacion */
 .sidebar-menu {
     list-style: none;
     padding: 0;
@@ -59,6 +89,8 @@
     transition: background-color 0.3s;
     border-radius: 8px;
     margin: 0 10px;
+    font-size: 1rem; /* base de Bootstrap - más grande que small */
+    font-weight: 500; /* fw-medium de Bootstrap */
 }
 
 .sidebar-menu a:hover {
@@ -77,7 +109,7 @@
     text-align: center;
 }
 
-/* Footer del sidebar */
+/* parte de abajo del sidebar */
 .sidebar-footer {
     position: absolute;
     bottom: 0;
@@ -87,11 +119,63 @@
     border-top: 1px solid var(--sidebar-border);
 }
 
+/* boton para cambiar modo oscuro */
+.dark-mode-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, var(--primary-color), #4CAF50);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dark-mode-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+}
+
+.dark-mode-toggle:active {
+    transform: scale(0.95);
+}
+
+.dark-mode-toggle .sun-icon {
+    display: none;
+    font-size: 20px;
+}
+
+.dark-mode-toggle .moon-icon {
+    display: inline-block;
+    font-size: 20px;
+}
+
+[data-theme="dark"] .dark-mode-toggle .sun-icon {
+    display: inline-block;
+    font-size: 20px;
+}
+
+[data-theme="dark"] .dark-mode-toggle .moon-icon {
+    display: none;
+    font-size: 20px;
+}
+
 .user-info {
     display: flex;
     align-items: center;
     margin-bottom: 15px;
     color: #bdc3c7;
+    font-size: 0.875rem; /* small de Bootstrap */
+    font-weight: 500; /* fw-medium de Bootstrap */
 }
 
 .user-info i {
@@ -107,7 +191,8 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 0.875rem; /* small de Bootstrap */
+    font-weight: 500; /* fw-medium de Bootstrap */
     transition: background-color 0.3s;
 }
 
@@ -122,6 +207,9 @@
     align-items: center;
     justify-content: center;
     text-align: center;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
 }
 
 /* Page content wrapper for regular pages (not centered like main-content) */
@@ -129,7 +217,9 @@
     margin-left: 250px;
     min-height: 100vh;
     padding: 20px;
-    background: #fff;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
 }
 
 .dash-cards {
@@ -532,4 +622,906 @@ canvas {
 @keyframes shimmer {
     0% { transform: translateX(-100%); }
     100% { transform: translateX(100%); }
+}
+
+/* ===== ESTILOS PARA EL MÓDULO DE ANÁLISIS ===== */
+
+/* Header del módulo de análisis */
+.analytics-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--bg-secondary), var(--card-bg));
+    border: 2px solid var(--primary-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+.analytics-title-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.analytics-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--primary-color), #4CAF50);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+}
+
+.analytics-main-title {
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 2rem;
+    margin: 0;
+    font-family: inherit;
+}
+
+.analytics-subtitle {
+    color: var(--muted-text);
+    font-size: 1rem;
+    margin: 5px 0 0 0;
+    font-family: inherit;
+}
+
+.analytics-filter {
+    min-width: 150px;
+}
+
+.month-filter {
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 14px;
+    color: var(--muted-text);
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.month-filter:focus {
+    box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
+    border-color: var(--primary-color);
+}
+
+/* Tarjetas de resumen */
+.analytics-summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    background: linear-gradient(135deg, var(--card-bg), var(--bg-secondary));
+    border: 2px solid var(--primary-color);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+.summary-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(46, 125, 50, 0.2);
+    border-color: var(--primary-color-600);
+}
+
+.card-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    background: rgba(46, 125, 50, 0.1);
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin: 0;
+    font-family: inherit;
+}
+
+.card-label {
+    color: var(--muted-text);
+    margin: 5px 0 0 0;
+    font-size: 0.9rem;
+    font-family: inherit;
+}
+
+/* Gráficos y análisis */
+.analytics-charts-section {
+    margin-bottom: 30px;
+}
+
+.chart-card {
+    background: var(--card-bg);
+    border: 2px solid var(--primary-color);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 15px var(--shadow-color);
+    transition: all 0.3s ease;
+}
+
+.chart-card:hover {
+    box-shadow: 0 8px 25px rgba(46, 125, 50, 0.15);
+}
+
+.chart-title {
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    font-family: inherit;
+    text-align: center;
+}
+
+.trend-chart-container {
+    text-align: center;
+    padding: 20px 0;
+}
+
+/* Análisis de patrones */
+.analysis-card {
+    background: var(--card-bg);
+    border: 2px solid var(--primary-color);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+.analysis-title {
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-bottom: 25px;
+    font-size: 1.3rem;
+    font-family: inherit;
+    text-align: center;
+}
+
+.pattern-insights {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.insight-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--bg-secondary), var(--card-bg));
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.insight-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.1);
+    border-color: var(--primary-color);
+}
+
+.insight-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    background: rgba(46, 125, 50, 0.1);
+    flex-shrink: 0;
+}
+
+.insight-content h4 {
+    color: var(--primary-color);
+    font-weight: bold;
+    margin: 0 0 8px 0;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.insight-content p {
+    color: var(--muted-text);
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    font-family: inherit;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .analytics-header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    
+    .analytics-summary-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .insight-item {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* ===== ESTILOS ADICIONALES PARA DARK MODE ===== */
+
+/* Mejoras para el dark mode en elementos específicos */
+[data-theme="dark"] .month-filter {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .month-filter:focus {
+    background-color: #4a4a4a;
+    border-color: #66bb6a;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+}
+
+[data-theme="dark"] .month-filter option {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .donut-chart::before {
+    background: var(--card-bg);
+}
+
+[data-theme="dark"] .donut-label {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .legend-item span {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] canvas {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+/* Mejoras adicionales para la visibilidad del texto en dark mode */
+[data-theme="dark"] .analytics-subtitle {
+    color: #f0f0f0; /* Blanco más brillante para subtítulos */
+}
+
+[data-theme="dark"] .card-label {
+    color: #e8e8e8; /* Blanco más brillante para etiquetas */
+}
+
+[data-theme="dark"] .insight-content p {
+    color: #f5f5f5; /* Blanco más brillante para párrafos */
+}
+
+[data-theme="dark"] .chart-title {
+    color: #4CAF50; /* Verde más brillante para títulos de gráficos */
+}
+
+[data-theme="dark"] .analysis-title {
+    color: #4CAF50; /* Verde más brillante para títulos de análisis */
+}
+
+[data-theme="dark"] .insight-content h4 {
+    color: #4CAF50; /* Verde más brillante para títulos de insights */
+}
+
+/* Mejorar contraste de las tarjetas de resumen */
+[data-theme="dark"] .summary-card {
+    background: linear-gradient(135deg, #3a3a3a, #2d2d2d);
+    border-color: #4CAF50;
+}
+
+[data-theme="dark"] .summary-card:hover {
+    background: linear-gradient(135deg, #4a4a4a, #3a3a3a);
+    border-color: #66bb6a;
+}
+
+/* Mejorar contraste del header */
+[data-theme="dark"] .analytics-header {
+    background: linear-gradient(135deg, #3a3a3a, #2d2d2d);
+}
+
+/* Mejorar contraste de los insights */
+[data-theme="dark"] .insight-item {
+    background: linear-gradient(135deg, #3a3a3a, #2d2d2d);
+    border-color: #555555;
+}
+
+[data-theme="dark"] .insight-item:hover {
+    background: linear-gradient(135deg, #4a4a4a, #3a3a3a);
+    border-color: #4CAF50;
+}
+
+/* Mejorar visibilidad de iconos y elementos decorativos */
+[data-theme="dark"] .card-icon {
+    background: rgba(76, 175, 80, 0.2); /* Verde más visible */
+}
+
+[data-theme="dark"] .insight-icon {
+    background: rgba(76, 175, 80, 0.2); /* Verde más visible */
+}
+
+/* Mejorar contraste de los gráficos */
+[data-theme="dark"] .donut-chart-container {
+    background-color: var(--card-bg);
+    border-radius: 50%;
+    padding: 10px;
+}
+
+[data-theme="dark"] .trend-chart-container {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 15px;
+}
+
+/* Mejorar visibilidad de los valores numéricos */
+[data-theme="dark"] .card-value {
+    color: #4CAF50; /* Verde más brillante para valores */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .donut-total {
+    color: #4CAF50; /* Verde más brillante para total */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Transiciones suaves para todos los elementos */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Mejoras para el botón de dark mode en móviles */
+@media (max-width: 768px) {
+    .dark-mode-toggle {
+        top: 15px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+}
+
+/* Estilos adicionales para modo oscuro */
+[data-theme="dark"] .table {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .table thead th {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .table tbody td {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .table tbody tr:hover {
+    background-color: var(--hover-bg);
+}
+
+[data-theme="dark"] .text-muted {
+    color: #b0b0b0 !important;
+}
+
+[data-theme="dark"] .dash-subtitle {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .dash-subtitle .text-muted {
+    color: #b0b0b0 !important;
+}
+
+/* Estilos para elementos de metas en modo oscuro */
+[data-theme="dark"] .goal-item {
+    background-color: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .goal-info {
+    background-color: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .goal-name {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .goal-percentage {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .progress-bar-small {
+    background-color: var(--bg-secondary) !important;
+}
+
+[data-theme="dark"] .goals-container {
+    background-color: var(--card-bg) !important;
+}
+
+/* Estilos para el botón de resumen rápido */
+[data-theme="dark"] .dash-subtitle {
+    background-color: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--primary-color) !important;
+}
+
+/* Estilos adicionales para tablas */
+[data-theme="dark"] .table-responsive {
+    background-color: var(--card-bg) !important;
+}
+
+[data-theme="dark"] .table-responsive .table {
+    background-color: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Estilos para elementos específicos del dashboard */
+[data-theme="dark"] .card-body {
+    background-color: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .card-title {
+    color: var(--text-primary) !important;
+}
+
+/* Estilos más específicos para forzar modo oscuro */
+[data-theme="dark"] * {
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .table td,
+[data-theme="dark"] .table th {
+    background-color: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--bg-secondary) !important;
+}
+
+[data-theme="dark"] .table-hover tbody tr:hover {
+    background-color: var(--hover-bg) !important;
+}
+
+/* Forzar estilos en todos los elementos del dashboard */
+[data-theme="dark"] .dashboard * {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .dashboard .card,
+[data-theme="dark"] .dashboard .card-body,
+[data-theme="dark"] .dashboard .table,
+[data-theme="dark"] .dashboard .table td,
+[data-theme="dark"] .dashboard .table th {
+    background-color: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Modo oscuro simple */
+[data-theme="dark"] .table {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .table td,
+[data-theme="dark"] .table th {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .goal-item {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .dash-subtitle {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+}
+
+/* Estilos para las categorías de gastos */
+.categories-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.category-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    background-color: var(--bg-secondary);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.category-icon {
+    font-size: 20px;
+    width: 30px;
+    text-align: center;
+}
+
+.category-info {
+    flex: 1;
+    text-align: left;
+}
+
+.category-name {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.category-amount {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: bold;
+}
+
+.category-bar {
+    width: 60px;
+    height: 8px;
+    background-color: var(--border-color);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.category-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.categories-total {
+    padding: 8px;
+    background-color: var(--bg-secondary);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+/* estilos para la tarjeta visual */
+.card-visual {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.credit-card {
+    width: 300px;
+    height: 180px;
+    background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+    border-radius: 15px;
+    padding: 20px;
+    color: white;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.credit-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.credit-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.02) 50%, transparent 70%);
+    pointer-events: none;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.card-logo {
+    font-size: 16px;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.9);
+    color: #2E7D32;
+    padding: 6px 10px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card-number {
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 2;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: relative;
+    z-index: 2;
+}
+
+.card-holder {
+    font-size: 13px;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.card-expiry {
+    font-size: 13px;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* modo oscuro para la tarjeta */
+[data-theme="dark"] .credit-card {
+    background: linear-gradient(135deg, #1B5E20 0%, #0D4A14 100%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .credit-card::before {
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+}
+
+[data-theme="dark"] .card-logo {
+    background: rgba(255, 255, 255, 0.95);
+    color: #1B5E20;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.registered-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.card-info {
+    flex: 1;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.card-alias {
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.card-type {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    background-color: var(--primary-color);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.card-details {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.card-number {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.card-holder {
+    margin-bottom: 2px;
+}
+
+.card-expiry {
+    font-size: 0.8rem;
+}
+
+.card-actions {
+    margin-left: 15px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+}
+
+.empty-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+.empty-text {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.empty-subtext {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* detalles de la tarjeta de resumen */
+.summary-details {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-color);
+}
+
+.summary-details small {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+/* mejoras para el formulario */
+.card-visual {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    padding: 20px;
+    background-color: var(--bg-secondary);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+/* campos del formulario en modo oscuro */
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: white !important;
+}
+
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus {
+    background-color: var(--bg-secondary);
+    border-color: var(--primary-color);
+    color: white !important;
+    box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
+}
+
+[data-theme="dark"] .form-control::placeholder,
+[data-theme="dark"] .form-select::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+[data-theme="dark"] .form-label {
+    color: white !important;
+    font-weight: 500;
+}
+
+/* estilos generales para formularios */
+.form-control,
+.form-select {
+    color: var(--text-primary);
+}
+
+.form-control::placeholder,
+.form-select::placeholder {
+    color: var(--text-secondary);
+}
+
+/* mejoras para el boton de registrar */
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #1B5E20 100%);
+    border: none;
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #1B5E20 0%, var(--primary-color) 100%);
+    box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(46, 125, 50, 0.3);
+}
+
+/* modal en modo oscuro */
+[data-theme="dark"] .modal-content {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .modal-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .modal-title {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .modal-footer {
+    border-top: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .btn-close {
+    filter: invert(1);
+}
+
+/* boton nueva transaccion */
+.btn-success {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #1B5E20 100%);
+    border: none;
+    box-shadow: 0 2px 8px rgba(46, 125, 50, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #1B5E20 0%, var(--primary-color) 100%);
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.4);
+    transform: translateY(-1px);
+}
+
+.btn-success:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(46, 125, 50, 0.3);
 }
