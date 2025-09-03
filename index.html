@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
@@ -13,6 +14,12 @@
     <div class="app-container">
         <!-- Sidebar -->
         <nav class="sidebar">
+            <!-- Botón de dark mode -->
+            <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Cambiar modo oscuro">
+                <i class="fas fa-sun sun-icon"></i>
+                <i class="fas fa-moon moon-icon"></i>
+            </button>
+            
             <div class="sidebar-header">
                 <i class="fas fa-balance-scale"></i>
                 <h2>BalanceUp</h2>
@@ -72,6 +79,7 @@
             </div>
         </main>
     </div>
+    <script src="js/darkMode.js"></script>
     <script src="js/index.js"></script>
     <script>
         function logout(){
