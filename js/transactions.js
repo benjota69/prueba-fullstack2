@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
     loadTransactions();  // Cargar transacciones existentes
     setupForm();         // Configurar el formulario
     setTodayDate();      // Poner fecha de hoy por defecto
+    setupFilters();      // Configurar filtros
+    createSampleData();  // Crear datos de ejemplo si no existen
 });
 
 // Configurar formulario
@@ -227,5 +229,204 @@ function getCardById(cardId) {
         return cards.find(card => card.id == cardId);
     } catch (error) {
         return null;  // Si hay error, no devolver nada
+    }
+}
+
+// Configurar filtros cuando se carga la página
+document.addEventListener('DOMContentLoaded', function() {
+    setupFilters();
+});
+
+// Configurar los filtros
+function setupFilters() {
+    const applyFiltersBtn = document.getElementById('applyFilters');
+    const clearFiltersBtn = document.getElementById('clearFilters');
+    
+    if (applyFiltersBtn) {
+        applyFiltersBtn.addEventListener('click', applyFilters);
+    }
+    
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', clearFilters);
+    }
+}
+
+// Aplicar filtros
+function applyFilters() {
+    const filterType = document.getElementById('filterType').value;
+    const filterCategory = document.getElementById('filterCategory').value;
+    const filterDateFrom = document.getElementById('filterDateFrom').value;
+    const filterDateTo = document.getElementById('filterDateTo').value;
+    
+    let transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+    
+    // Aplicar filtros
+    if (filterType) {
+        transactions = transactions.filter(t => t.type === filterType);
+    }
+    
+    if (filterCategory) {
+        transactions = transactions.filter(t => t.category === filterCategory);
+    }
+    
+    if (filterDateFrom) {
+        transactions = transactions.filter(t => t.date >= filterDateFrom);
+    }
+    
+    if (filterDateTo) {
+        transactions = transactions.filter(t => t.date <= filterDateTo);
+    }
+    
+    // Mostrar transacciones filtradas
+    displayTransactionsHorizontal(transactions);
+}
+
+// Limpiar filtros
+function clearFilters() {
+    document.getElementById('filterType').value = '';
+    document.getElementById('filterCategory').value = '';
+    document.getElementById('filterDateFrom').value = '';
+    document.getElementById('filterDateTo').value = '';
+    
+    // Mostrar todas las transacciones
+    loadTransactions();
+}
+
+// Mostrar transacciones en formato simple y ordenado
+function displayTransactionsHorizontal(transactions) {
+    const container = document.getElementById('transactionsList');
+    
+    if (!transactions || transactions.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-secondary);"><p>No hay transacciones registradas</p></div>';
+        return;
+    }
+    
+    // Ordenar por fecha (más recientes primero)
+    transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    // Obtener icono según el tipo
+    const getIcon = (type) => {
+        switch(type) {
+            case 'ingreso': return '💰';
+            case 'gasto': return '💸';
+            case 'compra': return '🛒';
+            case 'egreso': return '💸';
+            default: return '💳';
+        }
+    };
+    
+    let html = '';
+    
+    transactions.forEach(transaction => {
+        const isPositive = transaction.type === 'ingreso';
+        const amountClass = isPositive ? 'positive' : 'negative';
+        const amountSign = isPositive ? '+' : '-';
+        const formattedAmount = transaction.amount.toLocaleString('es-CL');
+        
+        // Crear detalles de la transacción
+        let details = `${transaction.category} • ${formatDate(transaction.date)}`;
+        if (transaction.cardId) {
+            details += ` • ${getCardName(transaction.cardId)}`;
+        }
+        if (transaction.commerceName) {
+            details += ` • ${transaction.commerceName}`;
+        }
+        
+        html += `
+            <div class="transaction-row">
+                <div class="transaction-icon ${transaction.type}">
+                    ${getIcon(transaction.type)}
+                </div>
+                <div class="transaction-info">
+                    <div class="transaction-description">${transaction.description}</div>
+                    <div class="transaction-details">${details}</div>
+                </div>
+                <div class="transaction-amount ${amountClass}">${amountSign}$${formattedAmount}</div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+// Obtener nombre de la tarjeta
+function getCardName(cardId) {
+    const card = getCardById(cardId);
+    return card ? card.name : 'Tarjeta desconocida';
+}
+
+// Formatear fecha
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-CL');
+}
+
+// Modificar la función loadTransactions para usar el nuevo formato
+function loadTransactions() {
+    try {
+        const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+        displayTransactionsHorizontal(transactions);
+    } catch (error) {
+        console.error('Error al cargar transacciones:', error);
+        document.getElementById('transactionsList').innerHTML = '<p class="text-center text-muted">Error al cargar transacciones</p>';
+    }
+}
+
+// Crear datos de ejemplo si no existen transacciones
+function createSampleData() {
+    try {
+        const existingTransactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+        
+        if (existingTransactions.length === 0) {
+            const sampleTransactions = [
+                {
+                    id: Date.now() + 1,
+                    type: 'ingreso',
+                    amount: 1500000,
+                    description: 'Salario mensual',
+                    category: 'Trabajo',
+                    date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+                },
+                {
+                    id: Date.now() + 2,
+                    type: 'gasto',
+                    amount: 45000,
+                    description: 'Supermercado',
+                    category: 'Alimentación',
+                    date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+                },
+                {
+                    id: Date.now() + 3,
+                    type: 'compra',
+                    amount: 89000,
+                    description: 'Zapatos deportivos',
+                    category: 'Ropa',
+                    date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    cardId: 'card1',
+                    commerceName: 'Deportes Max'
+                },
+                {
+                    id: Date.now() + 4,
+                    type: 'gasto',
+                    amount: 25000,
+                    description: 'Transporte público',
+                    category: 'Transporte',
+                    date: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+                },
+                {
+                    id: Date.now() + 5,
+                    type: 'ingreso',
+                    amount: 50000,
+                    description: 'Freelance diseño',
+                    category: 'Trabajo',
+                    date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+                }
+            ];
+            
+            localStorage.setItem('transactions', JSON.stringify(sampleTransactions));
+            loadTransactions(); // Recargar para mostrar los datos de ejemplo
+        }
+    } catch (error) {
+        console.error('Error al crear datos de ejemplo:', error);
     }
 }

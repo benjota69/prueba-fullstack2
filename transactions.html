@@ -12,8 +12,15 @@
 </head>
 <body>
     <div class="app-container">
+        <!-- Botón hamburguesa -->
+        <button class="hamburger-menu" onclick="toggleSidebar()" title="Menú">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+
         <!-- Sidebar -->
-        <nav class="sidebar">
+        <nav class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <!-- Logo de BalanceUp -->
                 <div class="sidebar-logo">
@@ -87,46 +94,107 @@
                 </div>
             </div>
 
-            <!-- Contenido principal -->
-            <div class="row">
-                <!-- Formulario para crear nuevas transacciones -->
-                <div class="col-lg-6 mb-4">
+            <!-- Formulario para nueva transacción -->
+            <div class="row mb-4">
+                <div class="col-12">
                     <div class="chart-card">
                         <div class="card-body">
                             <h3 class="card-title">Nueva Transacción</h3>
                             
                             <!-- Formulario que se conecta con js/transactions.js -->
                             <form id="transactionForm">
-                                <div class="mb-3">
-                                    <label for="transactionType" class="form-label">Tipo de Transacción</label>
-                                    <select class="form-select" id="transactionType" required>
-                                        <option value="">Seleccionar tipo</option>
-                                        <option value="ingreso">Ingreso</option>
-                                        <option value="gasto">Gasto</option>
-                                        <option value="compra">Realizar Compra</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="mb-3" id="cardSelectionGroup" style="display: none;">
-                                    <label for="transactionCard" class="form-label">Tarjeta a Usar</label>
-                                    <select class="form-select" id="transactionCard">
-                                        <option value="">Seleccionar tarjeta</option>
-                                    </select>
-                                    <small class="form-text text-muted">Selecciona una tarjeta para vincular la transacción</small>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="transactionAmount" class="form-label">Monto</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text">$</span>
-                                        <input type="number" class="form-control" id="transactionAmount" placeholder="0.00" step="0.01" min="0" required>
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <label for="transactionType" class="form-label">Tipo de Transacción</label>
+                                        <select class="form-select" id="transactionType" required>
+                                            <option value="">Seleccionar tipo</option>
+                                            <option value="ingreso">Ingreso</option>
+                                            <option value="gasto">Gasto</option>
+                                            <option value="compra">Realizar Compra</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-md-3 mb-3" id="cardSelectionGroup" style="display: none;">
+                                        <label for="transactionCard" class="form-label">Tarjeta a Usar</label>
+                                        <select class="form-select" id="transactionCard">
+                                            <option value="">Seleccionar tarjeta</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-md-3 mb-3">
+                                        <label for="transactionAmount" class="form-label">Monto</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" class="form-control" id="transactionAmount" placeholder="0.00" step="0.01" min="0" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-3 mb-3">
+                                        <label for="transactionCategory" class="form-label">Categoría</label>
+                                        <select class="form-select" id="transactionCategory" required>
+                                            <option value="">Seleccionar categoría</option>
+                                            <option value="alimentacion">Alimentación</option>
+                                            <option value="transporte">Transporte</option>
+                                            <option value="entretenimiento">Entretenimiento</option>
+                                            <option value="compras">Compras</option>
+                                            <option value="salario">Salario</option>
+                                            <option value="servicios">Servicios</option>
+                                            <option value="otros">Otros</option>
+                                        </select>
                                     </div>
                                 </div>
                                 
-                                <div class="mb-3">
-                                    <label for="transactionCategory" class="form-label">Categoría</label>
-                                    <select class="form-select" id="transactionCategory" required>
-                                        <option value="">Seleccionar categoría</option>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="transactionDescription" class="form-label">Descripción</label>
+                                        <input type="text" class="form-control" id="transactionDescription" placeholder="Descripción de la transacción" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3 mb-3">
+                                        <label for="transactionDate" class="form-label">Fecha</label>
+                                        <input type="date" class="form-control" id="transactionDate" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3 mb-3" id="commerceGroup" style="display: none;">
+                                        <label for="commerceName" class="form-label">Nombre del Comercio</label>
+                                        <input type="text" class="form-control" id="commerceName" placeholder="Nombre del comercio">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-primary">
+                                            <span>💾</span> Guardar Transacción
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filtros para el historial -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="chart-card">
+                        <div class="card-body">
+                            <h3 class="card-title">Filtros</h3>
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <label for="filterType" class="form-label">Tipo</label>
+                                    <select class="form-select" id="filterType">
+                                        <option value="">Todos los tipos</option>
+                                        <option value="ingreso">Ingreso</option>
+                                        <option value="gasto">Gasto</option>
+                                        <option value="compra">Compra</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-3 mb-3">
+                                    <label for="filterCategory" class="form-label">Categoría</label>
+                                    <select class="form-select" id="filterCategory">
+                                        <option value="">Todas las categorías</option>
                                         <option value="alimentacion">Alimentación</option>
                                         <option value="transporte">Transporte</option>
                                         <option value="entretenimiento">Entretenimiento</option>
@@ -137,38 +205,40 @@
                                     </select>
                                 </div>
                                 
-                                <div class="mb-3">
-                                    <label for="transactionDescription" class="form-label">Descripción</label>
-                                    <input type="text" class="form-control" id="transactionDescription" placeholder="Descripción de la transacción" required>
+                                <div class="col-md-3 mb-3">
+                                    <label for="filterDateFrom" class="form-label">Fecha desde</label>
+                                    <input type="date" class="form-control" id="filterDateFrom">
                                 </div>
                                 
-                                <div class="mb-3">
-                                    <label for="transactionDate" class="form-label">Fecha</label>
-                                    <input type="date" class="form-control" id="transactionDate" required>
+                                <div class="col-md-3 mb-3">
+                                    <label for="filterDateTo" class="form-label">Fecha hasta</label>
+                                    <input type="date" class="form-control" id="filterDateTo">
                                 </div>
-                                
-                                <div class="mb-3" id="commerceGroup" style="display: none;">
-                                    <label for="commerceName" class="form-label">Nombre del Comercio</label>
-                                    <input type="text" class="form-control" id="commerceName" placeholder="Nombre del comercio">
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-12">
+                                    <button type="button" class="btn btn-secondary me-2" id="clearFilters">
+                                        <span>🔄</span> Limpiar Filtros
+                                    </button>
+                                    <button type="button" class="btn btn-primary" id="applyFilters">
+                                        <span>🔍</span> Aplicar Filtros
+                                    </button>
                                 </div>
-                                
-
-                                
-                                <button type="submit" class="btn btn-primary w-100">
-                                    <span>💾</span> Guardar Transacción
-                                </button>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Lista donde se muestran todas las transacciones -->
-                <div class="col-lg-6 mb-4">
+            <!-- Historial de transacciones horizontal -->
+            <div class="row">
+                <div class="col-12">
                     <div class="chart-card">
                         <div class="card-body">
                             <h3 class="card-title">Historial de Transacciones</h3>
                             <!-- Contenedor donde js/transactions.js muestra las transacciones -->
-                            <div id="transactionsList">
+                            <div id="transactionsList" class="transactions-horizontal">
                                 <p class="text-center text-muted">No hay transacciones</p>
                             </div>
                         </div>
@@ -182,40 +252,8 @@
 
     <!-- Scripts necesarios para el funcionamiento -->
     <script src="js/darkMode.js"></script>      <!-- Maneja el modo oscuro -->
+    <script src="js/common.js"></script>        <!-- Funciones comunes -->
+    <script src="js/sidebar.js"></script>       <!-- Funcionalidad del sidebar -->
     <script src="js/transactions.js"></script>  <!-- Lógica principal de transacciones -->
-    <script>
-        function logout(){
-            try { localStorage.removeItem('demo_logged_in'); } catch(err) {}
-            window.location.href = 'login.html';
-        }
-        
-        // Protección mínima de demo
-        (function(){
-            try {
-                var logged = localStorage.getItem('demo_logged_in');
-                if (!logged) {
-                    window.location.href = 'login.html';
-                }
-            } catch(err) {}
-        })();
-
-        // Actualizar nombre del usuario en el sidebar
-        function updateUserName() {
-            try {
-                var userName = localStorage.getItem('app_user_name') || 'Usuario';
-                var userNameElement = document.getElementById('userName');
-                if (userNameElement) {
-                    userNameElement.textContent = userName;
-                }
-            } catch(err) {
-                console.error('Error al cargar nombre de usuario:', err);
-            }
-        }
-
-        // Cargar datos al iniciar
-        document.addEventListener('DOMContentLoaded', function() {
-            updateUserName();
-        });
-    </script>
 </body>
 </html>

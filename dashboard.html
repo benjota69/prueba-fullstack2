@@ -12,8 +12,15 @@
 </head>
 <body>
     <div class="app-container">
+        <!-- Botón hamburguesa -->
+        <button class="hamburger-menu" onclick="toggleSidebar()" title="Menú">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+
         <!-- Sidebar -->
-        <nav class="sidebar">
+        <nav class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <!-- Logo de BalanceUp -->
                 <div class="sidebar-logo">
@@ -196,20 +203,18 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Tarjetas Registradas -->
+                    <!-- Metas de Ahorro -->
                     <div class="col-md-4">
-                        <div class="summary-card">
+                        <div class="summary-card" style="position: relative;">
+                            <div class="goals-counter" id="goalsCounter">
+                                <!-- Contador total de metas -->
+                            </div>
                             <div class="card-body text-center">
                                 <div class="summary-icon">
-                                    <span>💳</span>
+                                    <span>🎯</span>
                                 </div>
-                                <h3 class="summary-value" id="totalCards">0</h3>
-                                <p class="summary-label">Tarjeta(s) Registrada(s)</p>
-                                <div class="summary-details">
-                                    <small class="text-muted">
-                                        <span id="creditCards">0</span> Crédito • 
-                                        <span id="debitCards">0</span> Débito
-                                    </small>
+                                <div id="goalSummaryContent">
+                                    <!-- Contenido dinámico de metas -->
                                 </div>
                             </div>
                         </div>
@@ -220,7 +225,7 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-2">
                             <h2 class="h6 mb-0 dash-section-title">Últimas transacciones</h2>
-                            <a class="small text-decoration-none dash-link" href="#">Ver todo</a>
+                            <a class="small text-decoration-none dash-link" href="transactions.html">Ver todo</a>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-sm align-middle mb-0" style="background-color: var(--card-bg); color: var(--text-primary);">
@@ -296,296 +301,9 @@
             </div>
         </div>
     </div>
-    <script>
-        function logout(){
-            try { localStorage.removeItem('demo_logged_in'); } catch(err) {}
-            window.location.href = 'login.html';
-        }
-
-        // cuenta las tarjetas que tengo guardadas
-        function updateCardsCount() {
-            try {
-                var cards = JSON.parse(localStorage.getItem('registered_cards') || '[]');
-                var totalCards = cards.length;
-                var creditCards = cards.filter(card => card.type === 'credito').length;
-                var debitCards = cards.filter(card => card.type === 'debito').length;
-                
-                document.getElementById('totalCards').textContent = totalCards;
-                document.getElementById('creditCards').textContent = creditCards;
-                document.getElementById('debitCards').textContent = debitCards;
-            } catch(err) {
-                console.error('Error al cargar tarjetas:', err);
-            }
-        }
-
-        // cuando carga la pagina hace todo esto
-        document.addEventListener('DOMContentLoaded', function() {
-            updateCardsCount();
-            updateUserName();
-            initializeDefaultData();
-            loadTransactions();
-            updateFinancialData();
-            // pone la fecha de hoy por defecto
-            document.getElementById('transactionDate').value = new Date().toISOString().split('T')[0];
-        });
-
-        // pone datos de ejemplo si no hay nada guardado
-        function initializeDefaultData() {
-            try {
-                var existingTransactions = localStorage.getItem('transactions');
-                if (!existingTransactions) {
-                    var defaultTransactions = [
-                        {
-                            id: 1,
-                            type: 'ingreso',
-                            amount: 180000,
-                            category: 'salario',
-                            description: 'Sueldo mensual',
-                            date: '2025-01-01',
-                            createdAt: new Date().toISOString()
-                        },
-                        {
-                            id: 2,
-                            type: 'gasto',
-                            amount: 25000,
-                            category: 'alimentacion',
-                            description: 'Supermercado',
-                            date: '2025-01-02',
-                            createdAt: new Date().toISOString()
-                        },
-                        {
-                            id: 3,
-                            type: 'gasto',
-                            amount: 15000,
-                            category: 'transporte',
-                            description: 'Combustible',
-                            date: '2025-01-03',
-                            createdAt: new Date().toISOString()
-                        },
-                        {
-                            id: 4,
-                            type: 'gasto',
-                            amount: 12000,
-                            category: 'entretenimiento',
-                            description: 'Cine',
-                            date: '2025-01-04',
-                            createdAt: new Date().toISOString()
-                        },
-                        {
-                            id: 5,
-                            type: 'gasto',
-                            amount: 8000,
-                            category: 'compras',
-                            description: 'Ropa',
-                            date: '2025-01-05',
-                            createdAt: new Date().toISOString()
-                        },
-                        {
-                            id: 6,
-                            type: 'ingreso',
-                            amount: 50000,
-                            category: 'otros',
-                            description: 'Freelance',
-                            date: '2025-01-06',
-                            createdAt: new Date().toISOString()
-                        },
-                        {
-                            id: 7,
-                            type: 'gasto',
-                            amount: 30000,
-                            category: 'alimentacion',
-                            description: 'Restaurante',
-                            date: '2025-01-07',
-                            createdAt: new Date().toISOString()
-                        },
-                        {
-                            id: 8,
-                            type: 'gasto',
-                            amount: 18000,
-                            category: 'transporte',
-                            description: 'Uber',
-                            date: '2025-01-08',
-                            createdAt: new Date().toISOString()
-                        }
-                    ];
-                    
-                    localStorage.setItem('transactions', JSON.stringify(defaultTransactions));
-                    console.log('datos de ejemplo cargados');
-                }
-            } catch(err) {
-                console.error('Error al inicializar datos por defecto:', err);
-            }
-        }
-
-        // cambia el nombre en el sidebar
-        function updateUserName() {
-            try {
-                var userName = localStorage.getItem('app_user_name') || 'Usuario';
-                var userNameElement = document.getElementById('userName');
-                if (userNameElement) {
-                    userNameElement.textContent = userName;
-                }
-            } catch(err) {
-                console.error('Error al cargar nombre de usuario:', err);
-            }
-        }
-
-        // guarda la transaccion nueva
-        function saveTransaction() {
-            var type = document.getElementById('transactionType').value;
-            var amount = parseFloat(document.getElementById('transactionAmount').value);
-            var category = document.getElementById('transactionCategory').value;
-            var description = document.getElementById('transactionDescription').value;
-            var date = document.getElementById('transactionDate').value;
-
-            if (!type || !amount || !category || !description || !date) {
-                alert('Por favor completa todos los campos.');
-                return;
-            }
-
-            var transaction = {
-                id: Date.now(),
-                type: type,
-                amount: amount,
-                category: category,
-                description: description,
-                date: date,
-                createdAt: new Date().toISOString()
-            };
-
-            // lo guardo en el navegador
-            try {
-                var transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
-                transactions.unshift(transaction); // lo pongo al principio
-                localStorage.setItem('transactions', JSON.stringify(transactions));
-            } catch(err) {
-                console.error('Error al guardar transacción:', err);
-                return;
-            }
-
-            // limpio el formulario
-            document.getElementById('transactionForm').reset();
-            document.getElementById('transactionDate').value = new Date().toISOString().split('T')[0];
-
-            // cierro la ventana
-            var modal = bootstrap.Modal.getInstance(document.getElementById('transactionModal'));
-            modal.hide();
-
-            // actualizo todo
-            loadTransactions();
-            updateFinancialData();
-
-            // muestro que se guardo
-            showSuccessMessage('Transacción guardada exitosamente');
-        }
-
-        // cargo las transacciones
-        function loadTransactions() {
-            try {
-                var transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
-                displayTransactions(transactions.slice(0, 5)); // solo las ultimas 5
-            } catch(err) {
-                console.error('Error al cargar transacciones:', err);
-            }
-        }
-
-        // pongo las transacciones en la tabla
-        function displayTransactions(transactions) {
-            var tbody = document.getElementById('lastTxBody');
-            if (!tbody) return;
-
-            if (transactions.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">No hay transacciones</td></tr>';
-                return;
-            }
-
-            var html = transactions.map(function(transaction) {
-                var amountClass = transaction.type === 'ingreso' ? 'text-success' : 'text-danger';
-                var amountSign = transaction.type === 'ingreso' ? '+' : '-';
-                var formattedDate = new Date(transaction.date).toLocaleDateString('es-ES');
-                
-                                                return `
-                    <tr>
-                        <td class="transaction-date">${formattedDate}</td>
-                        <td>${transaction.description}</td>
-                        <td class="text-end ${amountClass}">${amountSign}$${transaction.amount.toLocaleString()}</td>
-                    </tr>
-                `;
-            }).join('');
-
-            tbody.innerHTML = html;
-        }
-
-        // calculo el balance y todo eso
-        function updateFinancialData() {
-            try {
-                var transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
-
-                var totalIncome = 0;
-                var totalExpenses = 0;
-
-                transactions.forEach(function(transaction) {
-                    if (transaction.type === 'ingreso') {
-                        totalIncome += transaction.amount;
-                    } else if (transaction.type === 'gasto') {
-                        totalExpenses += transaction.amount;
-                    }
-                });
-
-                var balance = totalIncome - totalExpenses;
-
-                // actualizo los numeros en pantalla
-                document.getElementById('balanceAmount').textContent = '$' + balance.toLocaleString();
-                document.getElementById('incomeAmount').textContent = '$' + totalIncome.toLocaleString();
-                document.getElementById('expenseAmount').textContent = '$' + totalExpenses.toLocaleString();
-
-                // cambio los colores segun si es positivo o negativo
-                var balanceElement = document.getElementById('balanceAmount');
-                balanceElement.className = 'card-value ' + (balance >= 0 ? 'text-success' : 'text-danger');
-
-                // colores fijos para ingresos y gastos
-                var incomeElement = document.getElementById('incomeAmount');
-                var expenseElement = document.getElementById('expenseAmount');
-                
-                incomeElement.className = 'card-value text-success';
-                expenseElement.className = 'card-value text-danger';
-
-            } catch(err) {
-                console.error('Error al actualizar datos financieros:', err);
-            }
-        }
-
-        // muestra el mensaje de que se guardo
-        function showSuccessMessage(message) {
-            var notification = document.createElement('div');
-            notification.className = 'success-notification';
-            notification.textContent = message;
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: var(--primary-color);
-                color: white;
-                padding: 12px 20px;
-                border-radius: 8px;
-                box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
-                z-index: 1000;
-                animation: slideInRight 0.3s ease-out;
-            `;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(function() {
-                notification.style.animation = 'slideOutRight 0.3s ease-in';
-                setTimeout(function() {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
-                    }
-                }, 300);
-            }, 3000);
-        }
-    </script>
     <script src="js/darkMode.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/sidebar.js"></script>
     <script src="js/dashboard.js"></script>
 </body>
 </html>
