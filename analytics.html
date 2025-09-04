@@ -13,8 +13,15 @@
 </head>
 <body>
     <div class="app-container">
+        <!-- Botón hamburguesa -->
+        <button class="hamburger-menu" onclick="toggleSidebar()" title="Menú">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+
         <!-- Sidebar -->
-        <nav class="sidebar">
+        <nav class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <!-- Logo de BalanceUp -->
                 <div class="sidebar-logo">
@@ -237,40 +244,8 @@
     </div>
 
     <script src="js/darkMode.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/sidebar.js"></script>
     <script src="js/analytics.js"></script>
-    <script>
-        function logout(){
-            try { localStorage.removeItem('demo_logged_in'); } catch(err) {}
-            window.location.href = 'login.html';
-        }
-        
-        // Protección mínima de demo
-        (function(){
-            try {
-                var logged = localStorage.getItem('demo_logged_in');
-                if (!logged) {
-                    window.location.href = 'login.html';
-                }
-            } catch(err) {}
-        })();
-
-        // Actualizar nombre del usuario en el sidebar
-        function updateUserName() {
-            try {
-                var userName = localStorage.getItem('app_user_name') || 'Usuario';
-                var userNameElement = document.getElementById('userName');
-                if (userNameElement) {
-                    userNameElement.textContent = userName;
-                }
-            } catch(err) {
-                console.error('Error al cargar nombre de usuario:', err);
-            }
-        }
-
-        // Cargar datos al iniciar
-        document.addEventListener('DOMContentLoaded', function() {
-            updateUserName();
-        });
-    </script>
 </body>
 </html>
