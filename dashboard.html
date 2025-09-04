@@ -504,7 +504,7 @@
                 var amountSign = transaction.type === 'ingreso' ? '+' : '-';
                 var formattedDate = new Date(transaction.date).toLocaleDateString('es-ES');
                 
-                return `
+                                                return `
                     <tr>
                         <td class="transaction-date">${formattedDate}</td>
                         <td>${transaction.description}</td>

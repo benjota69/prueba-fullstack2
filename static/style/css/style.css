@@ -52,6 +52,7 @@ body {
 
 .sidebar-header {
     padding: 20px;
+    text-align: center;
     background-color: var(--sidebar-bg-2);
     border-bottom: 1px solid var(--sidebar-border);
     position: relative;
@@ -355,7 +356,6 @@ body {
 [data-theme="dark"] .auth-logo .logo-subtitle {
     color: var(--text-secondary);
 }
-
 /* Botones primarios y success en tonos verdes, sin azul */
 .btn-primary {
     /* Forzar paleta en todos los estados de Bootstrap */
