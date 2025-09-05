@@ -1,13 +1,11 @@
 // Módulo de Métodos de Pago - BalanceUp
+// Este archivo maneja el registro y gestión de tarjetas de crédito/débito
+
+// Cuando la página se carga, ejecutar estas funciones
 document.addEventListener('DOMContentLoaded', function() {
-    // Cargar tarjetas guardadas
-    loadRegisteredCards();
-    
-    // Event listeners para el formulario
-    setupFormListeners();
-    
-    // Event listeners para la tarjeta visual
-    setupCardVisualListeners();
+    loadRegisteredCards();      // Cargar tarjetas ya registradas
+    setupFormListeners();       // Configurar el formulario de registro
+    setupCardVisualListeners(); // Configurar la tarjeta visual en tiempo real
 });
 
 // Configurar listeners del formulario
@@ -87,8 +85,9 @@ function updateCardVisual() {
     }
 }
 
-// Registrar nueva tarjeta
+// Registrar una nueva tarjeta cuando el usuario envía el formulario
 function registerCard() {
+    // Obtener todos los datos del formulario
     const cardNumber = document.getElementById('cardNumber').value;
     const cardType = document.getElementById('cardType').value;
     const cardHolder = document.getElementById('cardHolder').value;
@@ -96,20 +95,21 @@ function registerCard() {
     const cardAlias = document.getElementById('cardAlias').value;
     const cardBank = document.getElementById('cardBank').value;
     
-    // Validaciones básicas
+    // Validar que todos los campos obligatorios estén llenos
     if (!cardNumber || !cardHolder || !cardExpiry || !cardBank) {
         alert('Por favor completa todos los campos obligatorios.');
         return;
     }
     
+    // Validar que el número de tarjeta tenga al menos 16 dígitos
     if (cardNumber.replace(/\s/g, '').length < 16) {
         alert('El número de tarjeta debe tener al menos 16 dígitos.');
         return;
     }
     
-    // Crear objeto de tarjeta
+    // Crear el objeto de la tarjeta con todos sus datos
     const newCard = {
-        id: Date.now(),
+        id: Date.now(),  // ID único basado en la fecha actual
         number: cardNumber,
         type: cardType,
         holder: cardHolder,
@@ -119,20 +119,20 @@ function registerCard() {
         registeredAt: new Date().toISOString()
     };
     
-    // Guardar en localStorage
+    // Guardar la tarjeta en el navegador
     saveCard(newCard);
     
-    // Limpiar formulario
+    // Limpiar el formulario para registrar otra tarjeta
     document.getElementById('cardForm').reset();
-    updateCardVisual();
+    updateCardVisual();  // Actualizar la tarjeta visual
     
-    // Recargar lista de tarjetas
+    // Recargar la lista de tarjetas para mostrar la nueva
     loadRegisteredCards();
     
-    // Mostrar mensaje de éxito
+    // Mostrar mensaje de éxito al usuario
     showSuccessMessage('Tarjeta registrada exitosamente');
     
-    // Actualizar dashboard si está abierto
+    // Actualizar el contador en el dashboard si está abierto
     if (typeof updateCardsCount === 'function') {
         updateCardsCount();
     }
@@ -199,17 +199,27 @@ function displayRegisteredCards(cards) {
     container.innerHTML = cardsHTML;
 }
 
-// Eliminar tarjeta
+// Eliminar una tarjeta específica
 function deleteCard(cardId) {
+    // Preguntar al usuario si está seguro de eliminar
     if (confirm('¿Estás seguro de que quieres eliminar esta tarjeta?')) {
         try {
+            // Obtener todas las tarjetas del navegador
             let cards = JSON.parse(localStorage.getItem('registered_cards') || '[]');
+            
+            // Filtrar las tarjetas para quitar la que queremos eliminar
             cards = cards.filter(card => card.id !== cardId);
+            
+            // Guardar las tarjetas actualizadas (sin la eliminada)
             localStorage.setItem('registered_cards', JSON.stringify(cards));
+            
+            // Recargar la lista para mostrar los cambios
             loadRegisteredCards();
+            
+            // Mostrar mensaje de éxito
             showSuccessMessage('Tarjeta eliminada exitosamente');
             
-            // Actualizar dashboard si está abierto
+            // Actualizar el contador en el dashboard si está abierto
             if (typeof updateCardsCount === 'function') {
                 updateCardsCount();
             }

@@ -33,10 +33,28 @@
 }
 
 /* estilos generales */
-body {
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
     background-color: var(--bg-primary);
     color: var(--text-primary);
     transition: all 0.3s ease;
+    overflow-x: hidden;
+}
+
+/* contenedor principal de la app */
+.app-container {
+    min-height: 100vh;
+    width: 100%;
+    background-color: var(--bg-primary);
 }
 
 /* barra lateral */
@@ -48,6 +66,7 @@ body {
     position: fixed;
     height: 100vh;
     overflow-y: auto;
+    z-index: 1000;
 }
 
 .sidebar-header {
@@ -55,18 +74,26 @@ body {
     text-align: center;
     background-color: var(--sidebar-bg-2);
     border-bottom: 1px solid var(--sidebar-border);
+    position: relative;
 }
 
-.sidebar-header i {
-    font-size: 24px;
+/* Logo del sidebar */
+.sidebar-logo {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.logo-icon {
+    font-size: 2.5rem;
     margin-bottom: 10px;
     color: var(--primary-color);
 }
 
 .sidebar-header h2 {
     margin: 0;
-    font-size: 1.25rem; /* h5 de Bootstrap */
-    font-weight: 600; /* fw-semibold de Bootstrap */
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
 }
 
 /* menu de navegacion */
@@ -122,6 +149,27 @@ body {
 /* boton para cambiar modo oscuro */
 .dark-mode-toggle {
     position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--primary-color), #4CAF50);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Botón de dark mode para página de login */
+.dark-mode-toggle-auth {
+    position: fixed;
     top: 20px;
     right: 20px;
     width: 45px;
@@ -140,31 +188,37 @@ body {
     justify-content: center;
 }
 
-.dark-mode-toggle:hover {
+.dark-mode-toggle:hover,
+.dark-mode-toggle-auth:hover {
     transform: scale(1.1);
     box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
 }
 
-.dark-mode-toggle:active {
+.dark-mode-toggle:active,
+.dark-mode-toggle-auth:active {
     transform: scale(0.95);
 }
 
-.dark-mode-toggle .sun-icon {
+.dark-mode-toggle .sun-icon,
+.dark-mode-toggle-auth .sun-icon {
     display: none;
     font-size: 20px;
 }
 
-.dark-mode-toggle .moon-icon {
+.dark-mode-toggle .moon-icon,
+.dark-mode-toggle-auth .moon-icon {
     display: inline-block;
     font-size: 20px;
 }
 
-[data-theme="dark"] .dark-mode-toggle .sun-icon {
+[data-theme="dark"] .dark-mode-toggle .sun-icon,
+[data-theme="dark"] .dark-mode-toggle-auth .sun-icon {
     display: inline-block;
     font-size: 20px;
 }
 
-[data-theme="dark"] .dark-mode-toggle .moon-icon {
+[data-theme="dark"] .dark-mode-toggle .moon-icon,
+[data-theme="dark"] .dark-mode-toggle-auth .moon-icon {
     display: none;
     font-size: 20px;
 }
@@ -277,6 +331,56 @@ body {
     font-size: 0.9rem;
 }
 
+/* Logo en página de login */
+.auth-logo {
+    margin-bottom: 2rem;
+}
+
+.auth-logo .logo-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+    animation: logoFloat 3s ease-in-out infinite;
+}
+
+.auth-logo .logo-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 4px rgba(46, 125, 50, 0.2);
+}
+
+.auth-logo .logo-subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: 0;
+    font-weight: 400;
+}
+
+/* Animación del logo */
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Modo oscuro para página de login */
+[data-theme="dark"] .auth-wrapper {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+}
+
+[data-theme="dark"] .auth-card {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .auth-logo .logo-title {
+    color: var(--primary-color);
+}
+
+[data-theme="dark"] .auth-logo .logo-subtitle {
+    color: var(--text-secondary);
+}
 /* Botones primarios y success en tonos verdes, sin azul */
 .btn-primary {
     /* Forzar paleta en todos los estados de Bootstrap */
@@ -1455,6 +1559,55 @@ canvas {
     font-weight: 500;
 }
 
+/* Asegurar texto visible en campos de login/registro */
+[data-theme="dark"] .auth-card .form-control,
+[data-theme="dark"] .auth-card .form-select {
+    background-color: #2a2a2a !important;
+    border-color: #555555 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .auth-card .form-control:focus,
+[data-theme="dark"] .auth-card .form-select:focus {
+    background-color: #2a2a2a !important;
+    border-color: var(--primary-color) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25) !important;
+}
+
+[data-theme="dark"] .auth-card .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+[data-theme="dark"] .auth-card .form-label {
+    color: #ffffff !important;
+    font-weight: 500;
+}
+
+/* Mejorar visibilidad del texto en pestañas */
+[data-theme="dark"] .auth-card .nav-pills .nav-link {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .auth-card .nav-pills .nav-link.active {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* Enlaces en modo oscuro */
+[data-theme="dark"] .auth-card a {
+    color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .auth-card a:hover {
+    color: #4CAF50 !important;
+}
+
+/* Texto de checkbox en modo oscuro */
+[data-theme="dark"] .auth-card .form-check-label {
+    color: #ffffff !important;
+}
+
 /* estilos generales para formularios */
 .form-control,
 .form-select {
@@ -1464,6 +1617,42 @@ canvas {
 .form-control::placeholder,
 .form-select::placeholder {
     color: var(--text-secondary);
+}
+
+/* Asegurar visibilidad en modo claro para auth */
+.auth-card .form-control,
+.auth-card .form-select {
+    color: #333333 !important;
+    background-color: #ffffff !important;
+    border-color: #e0e7e3 !important;
+}
+
+.auth-card .form-control:focus,
+.auth-card .form-select:focus {
+    color: #333333 !important;
+    background-color: #ffffff !important;
+    border-color: var(--primary-color) !important;
+}
+
+.auth-card .form-control::placeholder {
+    color: #6c757d !important;
+}
+
+.auth-card .form-label {
+    color: #333333 !important;
+    font-weight: 500;
+}
+
+.auth-card .nav-pills .nav-link {
+    color: #333333 !important;
+}
+
+.auth-card a {
+    color: var(--primary-color) !important;
+}
+
+.auth-card .form-check-label {
+    color: #333333 !important;
 }
 
 /* mejoras para el boton de registrar */
@@ -1524,4 +1713,1435 @@ canvas {
 .btn-success:active {
     transform: translateY(0);
     box-shadow: 0 2px 6px rgba(46, 125, 50, 0.3);
+}
+
+/* Estilos para el módulo de transacciones */
+.transaction-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.transaction-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px var(--shadow-color);
+}
+
+.transaction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.transaction-type .badge {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    border-radius: 20px;
+}
+
+.transaction-amount {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.transaction-body {
+    color: var(--text-secondary);
+}
+
+.transaction-description {
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.transaction-details {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 8px;
+    font-size: 0.875rem;
+}
+
+.transaction-category,
+.transaction-date {
+    background: var(--bg-secondary);
+    padding: 4px 8px;
+    border-radius: 6px;
+    color: var(--text-secondary);
+}
+
+.transaction-card,
+.transaction-commerce {
+    font-size: 0.8rem;
+    margin-top: 4px;
+}
+
+/* Filtros de transacciones */
+.btn-group .btn {
+    border-radius: 6px;
+    margin-right: 4px;
+    font-size: 0.875rem;
+    padding: 6px 12px;
+}
+
+.btn-group .btn.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+/* Modal de confirmación */
+.transaction-summary {
+    padding: 16px;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+}
+
+.transaction-summary .row {
+    margin-bottom: 12px;
+}
+
+.transaction-summary strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.transaction-summary .badge {
+    font-size: 0.875rem;
+    padding: 6px 10px;
+}
+
+/* Estados vacíos */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.6;
+}
+
+.empty-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.empty-subtext {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Responsive para transacciones */
+@media (max-width: 768px) {
+    .transaction-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .transaction-details {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .btn-group {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    
+    .btn-group .btn {
+        flex: 1;
+        min-width: 80px;
+    }
+}
+
+/* Animaciones para notificaciones */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Notificaciones */
+.success-notification,
+.error-notification {
+    animation: slideInRight 0.3s ease-out;
+}
+
+/* Clases para colores de texto */
+.text-success {
+    color: #28a745 !important; /* Verde para ingresos */
+}
+
+.text-danger {
+    color: #dc3545 !important; /* Rojo para gastos */
+}
+
+/* Estilos para transacciones en el dashboard */
+.transaction-date {
+    color: #2e7d32 !important; /* Verde oscuro para fechas en ambos modos */
+}
+
+/* Forzar color verde para fechas en modo oscuro */
+[data-theme="dark"] .transaction-date,
+[data-theme="dark"] td.transaction-date,
+[data-theme="dark"] #lastTxBody .transaction-date,
+[data-theme="dark"] #lastTxBody td.transaction-date {
+    color: #2e7d32 !important;
+}
+
+/* Enlace "Ver todo" en verde */
+.dash-link {
+    color: var(--primary-color) !important;
+    transition: color 0.3s ease;
+}
+
+.dash-link:hover {
+    color: #1B5E20 !important;
+}
+
+/* Forzar color verde para "Ver todo" en modo oscuro */
+[data-theme="dark"] .dash-link {
+    color: var(--primary-color) !important;
+}
+
+/* Asegurar que los montos se vean en verde/rojo en modo oscuro */
+[data-theme="dark"] .text-success,
+[data-theme="dark"] td.text-success {
+    color: #4CAF50 !important; /* Verde más claro para modo oscuro */
+}
+
+[data-theme="dark"] .text-danger,
+[data-theme="dark"] td.text-danger {
+    color: #F44336 !important; /* Rojo más claro para modo oscuro */
+}
+
+/* Forzar colores en modo oscuro para las transacciones */
+[data-theme="dark"] #lastTxBody .text-success,
+[data-theme="dark"] #lastTxBody td.text-success {
+    color: #4CAF50 !important;
+}
+
+[data-theme="dark"] #lastTxBody .text-danger,
+[data-theme="dark"] #lastTxBody td.text-danger {
+    color: #F44336 !important;
+}
+
+/* Estilos adicionales para modo oscuro */
+[data-theme="dark"] .dash-transactions .text-success {
+    color: #4CAF50 !important;
+}
+
+[data-theme="dark"] .dash-transactions .text-danger {
+    color: #F44336 !important;
+}
+
+[data-theme="dark"] .dash-transactions .transaction-date,
+[data-theme="dark"] .dash-transactions td.transaction-date,
+[data-theme="dark"] .dash-transactions #lastTxBody .transaction-date,
+[data-theme="dark"] .dash-transactions #lastTxBody td.transaction-date {
+    color: #2e7d32 !important;
+}
+
+[data-theme="dark"] .dash-transactions .dash-link {
+    color: var(--primary-color) !important;
+}
+    
+/* Estilos ultra específicos para fechas en modo oscuro */
+[data-theme="dark"] table tbody tr td.transaction-date,
+[data-theme="dark"] .table tbody tr td.transaction-date,
+[data-theme="dark"] .dash-transactions table tbody tr td.transaction-date {
+    color: #2e7d32 !important;
+    font-weight: 500;
+}
+
+/* Estilos para metas de ahorro - Versión súper simple */
+.goal-card {
+    background: white;
+    border: 2px solid #28a745;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.goal-card h4 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.goal-card .amount {
+    color: #28a745;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.goal-card .progress {
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.goal-card .summary {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 5px;
+}
+
+.goal-card .summary span {
+    color: #333;
+    font-weight: 500;
+}
+
+.goal-card .buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.goal-card button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.goal-card button:first-child {
+    background: #007bff;
+    color: white;
+}
+
+.goal-card button:last-child {
+    background: #dc3545;
+    color: white;
+}
+
+/* Estilos para metas en modo oscuro */
+[data-theme="dark"] .goal-card {
+    background: var(--card-bg);
+    border: 2px solid #28a745;
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .goal-card h4 {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .goal-card .amount {
+    color: #4CAF50;
+}
+
+[data-theme="dark"] .goal-card .progress {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .goal-card .summary {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .goal-card .summary span {
+    color: var(--text-primary);
+}
+
+/* Estilos para modales de metas */
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border-color);
+    background: var(--card-bg);
+    border-radius: 12px 12px 0 0;
+}
+
+.modal-body {
+    background: var(--card-bg);
+    padding: 24px;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border-color);
+    background: var(--card-bg);
+    border-radius: 0 0 12px 12px;
+}
+
+.modal-title {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.btn-close {
+    filter: var(--btn-close-filter);
+}
+
+/* Responsive para metas */
+@media (max-width: 768px) {
+    .goal-summary {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .goal-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .goal-progress-text {
+        text-align: left;
+    }
+    
+    .goal-actions {
+        justify-content: center;
+    }
+}
+
+/* Estilos específicos para el resumen de metas en el dashboard */
+.summary-title {
+    color: var(--text-primary) !important;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+[data-theme="dark"] .summary-title {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] #goalSummaryContent .summary-value {
+    color: #4CAF50 !important;
+}
+
+[data-theme="dark"] #goalSummaryContent .summary-label {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] #goalSummaryContent .summary-details small {
+    color: #b0b0b0 !important;
+}
+
+/* Asegurar que los iconos de metas se vean bien */
+.summary-icon span {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* Mejorar el espaciado en la tarjeta de metas */
+#goalSummaryContent {
+    padding: 8px 0;
+}
+
+#goalSummaryContent .summary-value {
+    margin: 8px 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+#goalSummaryContent .summary-label {
+    margin: 8px 0;
+    color: var(--text-secondary);
+}
+
+#goalSummaryContent .summary-details {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Contador de metas en esquina */
+.goals-counter {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(135deg, var(--primary-color), #4CAF50);
+    color: white;
+    border-radius: 12px;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(46, 125, 50, 0.3);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 35px;
+    text-align: center;
+}
+
+.goals-count {
+    font-size: 1rem;
+    font-weight: bold;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.goals-label {
+    font-size: 0.6rem;
+    line-height: 1;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Modo oscuro para el contador */
+[data-theme="dark"] .goals-counter {
+    background: linear-gradient(135deg, #1B5E20, var(--primary-color));
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Hover effect para el contador */
+.goals-counter:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+}
+
+/* Animación de entrada para el contador */
+.goals-counter {
+    animation: fadeInScale 0.4s ease-out;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ===== ESTILOS PARA PÁGINA DE INICIO ===== */
+
+/* Contenedor principal del index - ELIMINADO */
+
+/* Header del index */
+.index-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 1000;
+    padding: 1rem;
+    box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Menú hamburguesa */
+.hamburger-menu {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    position: relative;
+    z-index: 1002;
+}
+
+.hamburger-menu:hover {
+    background-color: rgba(46, 125, 50, 0.1);
+}
+
+.hamburger-line {
+    width: 25px;
+    height: 3px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.hamburger-menu.active .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+    background-color: var(--primary-color);
+}
+
+.hamburger-menu.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-menu.active .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+    background-color: var(--primary-color);
+}
+
+/* Logo del header */
+.header-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.header-logo .logo-icon {
+    font-size: 1.5rem;
+}
+
+.header-logo h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Menú móvil desplegable */
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 280px;
+    height: 100vh;
+    background-color: var(--sidebar-bg);
+    color: white;
+    z-index: 1001;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.mobile-menu.active {
+    left: 0;
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.mobile-menu-content {
+    padding: 1rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--sidebar-border);
+}
+
+.mobile-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mobile-logo .logo-icon {
+    font-size: 1.5rem;
+}
+
+.mobile-logo h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.close-menu {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.close-menu:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Lista del menú móvil */
+.mobile-menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+}
+
+.mobile-menu-list li {
+    margin-bottom: 0.5rem;
+}
+
+.mobile-menu-list a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+.mobile-menu-list a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.mobile-menu-list a:hover::before {
+    left: 100%;
+}
+
+.mobile-menu-list a:hover {
+    background-color: var(--primary-color);
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.mobile-menu-list a span {
+    font-size: 1.25rem;
+}
+
+/* Footer del menú móvil */
+.mobile-menu-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--sidebar-border);
+}
+
+.mobile-user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    color: white;
+}
+
+.mobile-user-info span:first-child {
+    font-size: 1.25rem;
+}
+
+.mobile-logout-btn {
+    width: 100%;
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.mobile-logout-btn:hover {
+    background-color: #b71c1c;
+    transform: translateY(-2px);
+}
+
+/* Contenido principal del index */
+.index-main-content {
+    padding-top: 80px; /* Espacio para el header fijo */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.welcome-container {
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+}
+
+.welcome-content {
+    background-color: var(--card-bg);
+    padding: 3rem 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px var(--shadow-color);
+    border: 1px solid var(--border-color);
+}
+
+.welcome-title {
+    font-size: 3rem;
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.welcome-name {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+    text-align: center;
+    display: block;
+    background: linear-gradient(135deg, var(--primary-color), #4caf50);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(46, 125, 50, 0.3);
+}
+
+.welcome-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
+
+.welcome-actions {
+    margin-top: 2rem;
+}
+
+.welcome-btn {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border-radius: 12px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.welcome-btn:hover::before {
+    left: 100%;
+}
+
+.welcome-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(46, 125, 50, 0.4);
+    background-color: var(--primary-color-600);
+}
+
+.welcome-btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+}
+
+/* Overlay para el menú móvil */
+.mobile-menu::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mobile-menu.active::before {
+    opacity: 1;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .welcome-content {
+        padding: 2rem 1.5rem;
+    }
+    
+    .welcome-title {
+        font-size: 2.5rem;
+    }
+    
+    .welcome-name {
+        font-size: 2rem;
+    }
+    
+    .welcome-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .welcome-btn {
+        padding: 0.875rem 1.5rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-content {
+        padding: 0 1rem;
+    }
+    
+    .header-logo h2 {
+        font-size: 1.25rem;
+    }
+    
+    .header-logo .logo-icon {
+        font-size: 1.25rem;
+    }
+    
+    .welcome-content {
+        padding: 1.5rem 1rem;
+    }
+    
+    .welcome-title {
+        font-size: 2rem;
+    }
+    
+    .welcome-name {
+        font-size: 1.75rem;
+    }
+    
+    .welcome-subtitle {
+        font-size: 1rem;
+    }
+    
+    .mobile-menu {
+        width: 100%;
+        max-width: 280px;
+    }
+}
+
+/* ===== ESTILOS PARA BOTÓN HAMBURGUESA ===== */
+
+/* Botón hamburguesa - solo visible en index */
+.index-container .hamburger-menu {
+    display: block;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1001;
+    background: var(--primary-color);
+    border: none;
+    cursor: pointer;
+    padding: 0.75rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+/* Ocultar hamburguesa en otras páginas */
+.app-container:not(.index-container) .hamburger-menu {
+    display: none;
+}
+
+.hamburger-menu:hover {
+    background-color: var(--primary-color-600);
+    transform: scale(1.05);
+}
+
+.hamburger-line {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    display: block;
+    margin: 3px 0;
+}
+
+.hamburger-menu.active .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.hamburger-menu.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-menu.active .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Estilos para sidebar desplegable - ELIMINADOS */
+
+/* Estilos eliminados - se manejan en media queries */
+
+/* Estilos para sidebar normal en otras páginas */
+.app-container:not(.index-container) .sidebar {
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+}
+
+.app-container:not(.index-container) .sidebar.active {
+    transform: translateX(0);
+}
+
+.app-container:not(.index-container) .page-content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    min-height: 100vh;
+    background-color: var(--bg-primary);
+}
+
+/* Overlay para cerrar sidebar - solo en index */
+.index-container .sidebar.active::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .index-container .hamburger-menu {
+        top: 0.5rem;
+        left: 0.5rem;
+        padding: 0.5rem;
+    }
+    
+    .hamburger-line {
+        width: 20px;
+        height: 2px;
+    }
+    
+    /* En móviles, todas las páginas usan sidebar desplegable */
+    .app-container:not(.index-container) .sidebar {
+        transform: translateX(-100%);
+    }
+    
+    .app-container:not(.index-container) .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .app-container:not(.index-container) .page-content {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    .app-container:not(.index-container) .hamburger-menu {
+        display: block;
+    }
+}
+
+/* ===== ESTILOS MINIMALISTAS PARA PÁGINA DE BIENVENIDA ===== */
+
+/* Contenedor de bienvenida */
+.welcome-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+    padding: 2rem;
+    background-color: var(--bg-primary);
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* Contenido de bienvenida */
+.welcome-content {
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    padding: 3rem 2rem;
+    background: var(--card-bg);
+    border-radius: 24px;
+    box-shadow: 0 20px 40px var(--shadow-color);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(10px);
+    animation: fadeInUp 0.8s ease-out;
+}
+
+/* Título de bienvenida */
+.welcome-title {
+    font-size: 3.5rem;
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+
+/* Nombre del usuario */
+.welcome-name {
+    font-size: 2.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+}
+
+/* Subtítulo */
+.welcome-subtitle {
+    font-size: 1.3rem;
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    line-height: 1.4;
+}
+
+/* Contenedor de acciones */
+.welcome-actions {
+    margin-top: 2rem;
+}
+
+/* Botón principal */
+.welcome-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.2rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border-radius: 16px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(46, 125, 50, 0.3);
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(46, 125, 50, 0.4);
+    background-color: var(--primary-color-600);
+    color: white;
+    text-decoration: none;
+}
+
+.welcome-btn:active {
+    transform: translateY(-1px);
+}
+
+.welcome-btn span {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.welcome-btn:hover span {
+    transform: scale(1.1);
+}
+
+/* Animación de entrada */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* DISEÑO COMPLETAMENTE NUEVO PARA COMPUTADORES */
+@media (min-width: 769px) {
+    .index-container .page-content {
+        margin-left: 250px !important;
+        width: calc(100% - 250px) !important;
+        height: 100vh !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background-color: var(--bg-primary) !important;
+        padding: 2rem !important;
+    }
+    
+    .centered-content {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        height: 100vh !important;
+    }
+    
+    .welcome-card {
+        background-color: var(--card-bg) !important;
+        padding: 3rem 2rem !important;
+        border-radius: 20px !important;
+        box-shadow: 0 10px 30px var(--shadow-color) !important;
+        text-align: center !important;
+        max-width: 600px !important;
+        width: 100% !important;
+    }
+}
+
+/* Estilos para lista de transacciones simple y ordenada */
+.transactions-horizontal {
+    max-height: 500px;
+    overflow-y: auto;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.transaction-row {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s ease;
+}
+
+.transaction-row:last-child {
+    border-bottom: none;
+}
+
+.transaction-row:hover {
+    background-color: var(--hover-bg);
+}
+
+.transaction-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.transaction-icon.ingreso {
+    background-color: #e8f5e8;
+    color: #2e7d32;
+}
+
+.transaction-icon.egreso {
+    background-color: #ffebee;
+    color: #d32f2f;
+}
+
+.transaction-icon.gasto {
+    background-color: #ffebee;
+    color: #d32f2f;
+}
+
+.transaction-icon.compra {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.transaction-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.transaction-description {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.transaction-details {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.transaction-amount {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: right;
+    margin-left: 1rem;
+    flex-shrink: 0;
+    min-width: 120px;
+}
+
+.transaction-amount.positive {
+    color: #2e7d32;
+}
+
+.transaction-amount.negative {
+    color: #d32f2f;
+}
+
+/* Estilos para filtros */
+.filter-section {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.filter-row {
+    display: flex;
+    gap: 1rem;
+    align-items: end;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .transactions-horizontal {
+        max-height: 400px;
+    }
+    
+    .transaction-row {
+        padding: 0.75rem 1rem;
+    }
+    
+    .transaction-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+        margin-right: 0.75rem;
+    }
+    
+    .transaction-description {
+        font-size: 0.9rem;
+    }
+    
+    .transaction-details {
+        font-size: 0.8rem;
+    }
+    
+    .transaction-amount {
+        font-size: 1rem;
+        margin-left: 0.75rem;
+        min-width: 100px;
+    }
+    
+    .filter-row {
+        flex-direction: column;
+    }
+    
+    .filter-group {
+        min-width: 100%;
+    }
+    
+    .welcome-container {
+        padding: 1rem;
+    }
+    
+    .welcome-content {
+        padding: 2.5rem 1.5rem;
+        border-radius: 20px;
+    }
+    
+    .welcome-title {
+        font-size: 2.8rem;
+    }
+    
+    .welcome-name {
+        font-size: 2.2rem;
+    }
+    
+    .welcome-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .welcome-btn {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-content {
+        padding: 2rem 1rem;
+    }
+    
+    .welcome-title {
+        font-size: 2.4rem;
+    }
+    
+    .welcome-name {
+        font-size: 1.9rem;
+    }
+    
+    .welcome-subtitle {
+        font-size: 1rem;
+    }
+    
+    .welcome-btn {
+        padding: 0.9rem 1.8rem;
+        font-size: 0.95rem;
+    }
 }

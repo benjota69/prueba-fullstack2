@@ -1,36 +1,39 @@
-// Módulo de Análisis Financiero - BalanceUp
+// Módulo de Análisis Financiero
+// Este archivo maneja los análisis y gráficos financieros
+
+// Cuando la página se carga, ejecutar estas funciones
 document.addEventListener('DOMContentLoaded', function() {
     // Configurar el mes actual por defecto
     const currentMonth = new Date().getMonth() + 1;
     document.getElementById('monthFilter').value = currentMonth;
     
-    // Event listener para el filtro de mes
+    // Configurar el filtro de mes para cambiar análisis
     document.getElementById('monthFilter').addEventListener('change', function() {
         updateAnalytics(this.value);
     });
     
-    // Inicializar análisis
+    // Inicializar análisis con el mes actual
     updateAnalytics(currentMonth);
     
-    // Crear gráfico de tendencias
+    // Crear gráfico de tendencias de los últimos meses
     createTrendChart();
 });
 
-// Función para actualizar el análisis según el mes seleccionado
+// Función principal para actualizar todo el análisis cuando cambia el mes
 function updateAnalytics(month) {
-    // Simular datos del mes seleccionado
+    // Obtener datos simulados del mes seleccionado
     const monthData = getMonthData(month);
     
-    // Actualizar tarjetas de resumen
+    // Actualizar las tarjetas de resumen (ingresos, gastos, ahorro)
     updateSummaryCards(monthData);
     
-    // Actualizar gráfico de dona
+    // Actualizar el gráfico de dona con las categorías de gastos
     updateDonutChart(monthData.categories);
     
-    // Actualizar análisis de patrones
+    // Actualizar el análisis de patrones e insights
     updatePatternAnalysis(monthData);
     
-    // Mostrar notificación de cambio
+    // Mostrar notificación de que cambió el mes
     showMonthChangeNotification(month);
 }
 

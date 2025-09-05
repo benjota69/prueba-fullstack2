@@ -1,261 +1,606 @@
-(function(){
-    // Leer nombre del usuario
-    var userName = localStorage.getItem('app_user_name') || '';
-    var dashUserName = document.getElementById('dashUserName');
-    if (dashUserName) {
-        dashUserName.textContent = userName || 'Usuario';
-    }
+// Módulo del Dashboard - BalanceUp
+// Este archivo maneja la pantalla principal con resumen financiero
 
-    // Datos demo: intentar leer de localStorage; si no, usar predeterminados
-    var balance = 0, income = 0, expense = 0, txs = [];
-    
-    // Leer datos guardados o usar valores por defecto
-    balance = Number(localStorage.getItem('demo_balance') || 125000);
-    income = Number(localStorage.getItem('demo_income') || 180000);
-    expense = Number(localStorage.getItem('demo_expense') || 55000);
-    
-    // Leer transacciones guardadas o usar las de ejemplo
-    var raw = localStorage.getItem('demo_txs');
-    if (raw) {
-        txs = JSON.parse(raw);
-    } else {
-        txs = [
-            { date: '2025-08-01', desc: 'Sueldo', amount: 180000 },
-            { date: '2025-08-02', desc: 'Supermercado', amount: -25000 },
-            { date: '2025-08-03', desc: 'Transporte', amount: -6000 },
-            { date: '2025-08-04', desc: 'Restaurante', amount: -18000 }
-        ];
-    }
-
-    // Función para formatear números: convierte 125000 en "+$125.000" o "-$125.000"
-    function fmt(n){
-        var sign = n >= 0 ? '+' : '-';
-        var absValue = Math.abs(n);
-        return sign + '$' + absValue.toLocaleString('es-CL');
-    }
-
-    var balanceAmount = document.getElementById('balanceAmount');
-    var incomeAmount = document.getElementById('incomeAmount');
-    var expenseAmount = document.getElementById('expenseAmount');
-    if (balanceAmount) balanceAmount.textContent = fmt(balance);
-    if (incomeAmount) {
-        incomeAmount.textContent = fmt(income);
-        incomeAmount.style.fontWeight = 'bold';
-        incomeAmount.style.color = '#28a745'; // verde
-    }
-    if (expenseAmount) {
-        expenseAmount.textContent = fmt(expense);
-        expenseAmount.style.fontWeight = 'bold';
-        expenseAmount.style.color = '#dc3545'; // rojo
-    }
-
-    var body = document.getElementById('lastTxBody');
-    if (body) {
-        body.innerHTML = '';
-        txs.slice(0, 5).forEach(function(tx){
-            var tr = document.createElement('tr');
-            var td1 = document.createElement('td'); td1.textContent = tx.date;
-            var td2 = document.createElement('td'); td2.textContent = tx.desc;
-            var td3 = document.createElement('td'); td3.className = 'text-end ' + (tx.amount < 0 ? 'text-danger' : 'text-success'); td3.textContent = fmt(tx.amount);
-            tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
-            body.appendChild(tr);
-        });
-    }
-
-    // Función para dibujar gráfico de barras
-    function drawBarChart() {
-        var canvas = document.getElementById('barChart');
-        if (!canvas) return;
+// cargar y mostrar la meta de ahorro más importante
+function updateGoalsSummary() {
+    try {
+        var goals = JSON.parse(localStorage.getItem('savings_goals') || '[]');
+        var container = document.getElementById('goalSummaryContent');
+        var counter = document.getElementById('goalsCounter');
         
-        var ctx = canvas.getContext('2d');
-        var width = canvas.width;
-        var height = canvas.height;
+        if (!container) return;
         
-        // Limpiar canvas
-        ctx.clearRect(0, 0, width, height);
-        
-        // Configurar colores
-        var greenColor = '#28a745';
-        var redColor = '#dc3545';
-        
-        // Dibujar barras
-        var barWidth = 60;
-        var barSpacing = 40;
-        var startX = 50;
-        var maxHeight = height - 60;
-        
-        // Escalar los valores para que quepan en el canvas
-        var maxValue = Math.max(income, expense);
-        var scale = maxHeight / maxValue;
-        
-        // Barra de ingresos (verde)
-        var incomeHeight = income * scale;
-        ctx.fillStyle = greenColor;
-        ctx.fillRect(startX, height - 40 - incomeHeight, barWidth, incomeHeight);
-        
-        // Barra de gastos (rojo)
-        var expenseHeight = expense * scale;
-        ctx.fillRect(startX + barWidth + barSpacing, height - 40 - expenseHeight, barWidth, expenseHeight);
-        
-        // Etiquetas
-        ctx.fillStyle = '#333';
-        ctx.font = '12px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText('Ingresos', startX + barWidth/2, height - 20);
-        ctx.fillText('Gastos', startX + barWidth + barSpacing + barWidth/2, height - 20);
-        
-        // Valores en las barras
-        ctx.fillStyle = 'white';
-        ctx.font = 'bold 10px Arial';
-        ctx.fillText(fmt(income), startX + barWidth/2, height - 40 - incomeHeight + 15);
-        ctx.fillText(fmt(expense), startX + barWidth + barSpacing + barWidth/2, height - 40 - expenseHeight + 15);
-    }
-    
-    // Función para dibujar gráfico circular
-    function drawPieChart() {
-        var canvas = document.getElementById('pieChart');
-        if (!canvas) return;
-        
-        var ctx = canvas.getContext('2d');
-        var width = canvas.width;
-        var height = canvas.height;
-        
-        // Limpiar canvas
-        ctx.clearRect(0, 0, width, height);
-        
-        // Configurar colores
-        var greenColor = '#28a745';
-        var redColor = '#dc3545';
-        
-        // Centro del círculo
-        var centerX = width / 2;
-        var centerY = height / 2;
-        var radius = Math.min(width, height) / 3;
-        
-        // Calcular ángulos
-        var total = income + expense;
-        var incomeAngle = (income / total) * 2 * Math.PI;
-        var expenseAngle = (expense / total) * 2 * Math.PI;
-        
-        // Dibujar sector de ingresos
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
-        ctx.arc(centerX, centerY, radius, 0, incomeAngle);
-        ctx.closePath();
-        ctx.fillStyle = greenColor;
-        ctx.fill();
-        
-        // Dibujar sector de gastos
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
-        ctx.arc(centerX, centerY, radius, incomeAngle, incomeAngle + expenseAngle);
-        ctx.closePath();
-        ctx.fillStyle = redColor;
-        ctx.fill();
-        
-        // Leyenda
-        ctx.fillStyle = '#333';
-        ctx.font = '12px Arial';
-        ctx.textAlign = 'left';
-        ctx.fillText('Ingresos: ' + fmt(income), 10, height - 40);
-        ctx.fillText('Gastos: ' + fmt(expense), 10, height - 20);
-    }
-    
-    // Dibujar los gráficos
-    drawBarChart();
-    drawPieChart();
-
-    // Gráfico de dona interactivo
-    function initDonutChart() {
-        var donutLegend = document.getElementById('donutLegend');
-        if (!donutLegend) return;
-        
-        // Crear leyenda interactiva
-        var segments = [
-            { label: 'Comida', value: 40, color: '#FF6B6B' },
-            { label: 'Transporte', value: 25, color: '#4ECDC4' },
-            { label: 'Entretenimiento', value: 20, color: '#45B7D1' },
-            { label: 'Otros', value: 15, color: '#96CEB4' }
-        ];
-        
-        segments.forEach(function(segment) {
-            var legendItem = document.createElement('div');
-            legendItem.className = 'legend-item';
-            legendItem.innerHTML = `
-                <div class="legend-color" style="background-color: ${segment.color}"></div>
-                <span>${segment.label}: ${segment.value}%</span>
+        // Actualizar contador de metas
+        if (counter) {
+            counter.innerHTML = `
+                <span class="goals-count">${goals.length}</span>
+                <span class="goals-label">Total</span>
             `;
-            
-            // Interactividad: click para ver detalles
-            legendItem.addEventListener('click', function() {
-                alert(`${segment.label}:\n${segment.value}% de tus gastos totales\nAproximadamente ${fmt(expense * segment.value / 100)}`);
-            });
-            
-            donutLegend.appendChild(legendItem);
-        });
+        }
         
-        // Hacer el gráfico de dona clickeable
+        if (goals.length === 0) {
+            container.innerHTML = `
+                <h3 class="summary-value text-muted">No hay</h3>
+                <p class="summary-label">Metas Creadas</p>
+                <div class="summary-details">
+                    <small class="text-muted">Crea tu primera meta de ahorro</small>
+                </div>
+            `;
+            return;
+        }
+        
+        // Encontrar la meta más importante (la que tiene mayor progreso o la primera)
+        var mostImportantGoal = goals[0]; // Por defecto la primera
+        var highestProgress = (mostImportantGoal.savedAmount / mostImportantGoal.amount) * 100;
+        
+        for (var i = 1; i < goals.length; i++) {
+            var currentProgress = (goals[i].savedAmount / goals[i].amount) * 100;
+            if (currentProgress > highestProgress) {
+                mostImportantGoal = goals[i];
+                highestProgress = currentProgress;
+            }
+        }
+        
+        var progress = Math.round(highestProgress);
+        var amountLeft = mostImportantGoal.amount - mostImportantGoal.savedAmount;
+        
+        container.innerHTML = `
+            <h4 class="summary-title" style="font-size: 1rem; margin-bottom: 8px; color: var(--text-primary);">${mostImportantGoal.name}</h4>
+            <h3 class="summary-value text-success">$${mostImportantGoal.amount.toLocaleString()}</h3>
+            <p class="summary-label">Meta Principal</p>
+            <div class="summary-details">
+                <small class="text-muted">
+                    Progreso: ${progress}% • 
+                    Faltan: $${amountLeft.toLocaleString()}
+                </small>
+            </div>
+        `;
+    } catch(err) {
+        console.error('Error al cargar metas:', err);
+        var container = document.getElementById('goalSummaryContent');
+        var counter = document.getElementById('goalsCounter');
+        
+        if (container) {
+            container.innerHTML = `
+                <h3 class="summary-value text-muted">Error</h3>
+                <p class="summary-label">al cargar metas</p>
+            `;
+        }
+        
+        if (counter) {
+            counter.innerHTML = `
+                <span class="goals-count">0</span>
+                <span class="goals-label">Total</span>
+            `;
+        }
+    }
+}
+
+// cuando carga la pagina hace todo esto
+document.addEventListener('DOMContentLoaded', function() {
+    updateGoalsSummary();
+    updateUserName();
+    initializeDefaultData();
+    loadTransactions();
+    updateFinancialData();
+    // pone la fecha de hoy por defecto
+    document.getElementById('transactionDate').value = new Date().toISOString().split('T')[0];
+});
+
+// pone datos de ejemplo si no hay nada guardado
+function initializeDefaultData() {
+    try {
+        var existingTransactions = localStorage.getItem('transactions');
+        if (!existingTransactions) {
+            var defaultTransactions = [
+                {
+                    id: 1,
+                    type: 'ingreso',
+                    amount: 180000,
+                    category: 'salario',
+                    description: 'Sueldo mensual',
+                    date: '2025-01-01',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 2,
+                    type: 'gasto',
+                    amount: 25000,
+                    category: 'alimentacion',
+                    description: 'Supermercado',
+                    date: '2025-01-02',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 3,
+                    type: 'gasto',
+                    amount: 15000,
+                    category: 'transporte',
+                    description: 'Combustible',
+                    date: '2025-01-03',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 4,
+                    type: 'gasto',
+                    amount: 12000,
+                    category: 'entretenimiento',
+                    description: 'Cine',
+                    date: '2025-01-04',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 5,
+                    type: 'gasto',
+                    amount: 8000,
+                    category: 'compras',
+                    description: 'Ropa',
+                    date: '2025-01-05',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 6,
+                    type: 'ingreso',
+                    amount: 50000,
+                    category: 'otros',
+                    description: 'Freelance',
+                    date: '2025-01-06',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 7,
+                    type: 'gasto',
+                    amount: 30000,
+                    category: 'alimentacion',
+                    description: 'Restaurante',
+                    date: '2025-01-07',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 8,
+                    type: 'gasto',
+                    amount: 18000,
+                    category: 'transporte',
+                    description: 'Uber',
+                    date: '2025-01-08',
+                    createdAt: new Date().toISOString()
+                }
+            ];
+            
+            localStorage.setItem('transactions', JSON.stringify(defaultTransactions));
+            console.log('datos de ejemplo cargados');
+        }
+    } catch(err) {
+        console.error('Error al inicializar datos por defecto:', err);
+    }
+}
+
+// guarda la transaccion nueva
+function saveTransaction() {
+    var type = document.getElementById('transactionType').value;
+    var amount = parseFloat(document.getElementById('transactionAmount').value);
+    var category = document.getElementById('transactionCategory').value;
+    var description = document.getElementById('transactionDescription').value;
+    var date = document.getElementById('transactionDate').value;
+
+    if (!type || !amount || !category || !description || !date) {
+        alert('Por favor completa todos los campos.');
+        return;
+    }
+
+    var transaction = {
+        id: Date.now(),
+        type: type,
+        amount: amount,
+        category: category,
+        description: description,
+        date: date,
+        createdAt: new Date().toISOString()
+    };
+
+    // lo guardo en el navegador
+    try {
+        var transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+        transactions.unshift(transaction); // lo pongo al principio
+        localStorage.setItem('transactions', JSON.stringify(transactions));
+    } catch(err) {
+        console.error('Error al guardar transacción:', err);
+        return;
+    }
+
+    // limpio el formulario
+    document.getElementById('transactionForm').reset();
+    document.getElementById('transactionDate').value = new Date().toISOString().split('T')[0];
+
+    // cierro la ventana
+    var modal = bootstrap.Modal.getInstance(document.getElementById('transactionModal'));
+    modal.hide();
+
+    // actualizo todo
+    loadTransactions();
+    updateFinancialData();
+
+    // muestro que se guardo
+    showSuccessMessage('Transacción guardada exitosamente');
+}
+
+// cargo las transacciones
+function loadTransactions() {
+    try {
+        var transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+        displayTransactions(transactions.slice(0, 5)); // solo las ultimas 5
+    } catch(err) {
+        console.error('Error al cargar transacciones:', err);
+    }
+}
+
+// pongo las transacciones en la tabla
+function displayTransactions(transactions) {
+    var tbody = document.getElementById('lastTxBody');
+    if (!tbody) return;
+
+    if (transactions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">No hay transacciones</td></tr>';
+        return;
+    }
+
+    var html = transactions.map(function(transaction) {
+        var amountClass = transaction.type === 'ingreso' ? 'text-success' : 'text-danger';
+        var amountSign = transaction.type === 'ingreso' ? '+' : '-';
+        var formattedDate = new Date(transaction.date).toLocaleDateString('es-ES');
+        
+        return `
+            <tr>
+                <td class="transaction-date">${formattedDate}</td>
+                <td>${transaction.description}</td>
+                <td class="text-end ${amountClass}">${amountSign}$${transaction.amount.toLocaleString()}</td>
+            </tr>
+        `;
+    }).join('');
+
+    tbody.innerHTML = html;
+}
+
+// analizar gastos por categoria
+function analyzeExpensesByCategory() {
+    try {
+        var transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+        var expensesByCategory = {};
+        var totalExpenses = 0;
+
+        // calcular gastos por categoria
+        transactions.forEach(function(transaction) {
+            if (transaction.type === 'gasto') {
+                var category = transaction.category || 'otros';
+                if (!expensesByCategory[category]) {
+                    expensesByCategory[category] = 0;
+                }
+                expensesByCategory[category] += transaction.amount;
+                totalExpenses += transaction.amount;
+            }
+        });
+
+        // convertir a array y ordenar por monto
+        var categoriesArray = Object.keys(expensesByCategory).map(function(category) {
+            var percentage = totalExpenses > 0 ? (expensesByCategory[category] / totalExpenses) * 100 : 0;
+            return {
+                category: category,
+                amount: expensesByCategory[category],
+                percentage: Math.round(percentage)
+            };
+        }).sort(function(a, b) {
+            return b.amount - a.amount;
+        });
+
+        return {
+            categories: categoriesArray,
+            totalExpenses: totalExpenses
+        };
+    } catch(err) {
+        console.error('Error al analizar gastos por categoria:', err);
+        return { categories: [], totalExpenses: 0 };
+    }
+}
+
+// calculo el balance y todo eso
+function updateFinancialData() {
+    try {
+        var transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+
+        var totalIncome = 0;
+        var totalExpenses = 0;
+
+        transactions.forEach(function(transaction) {
+            if (transaction.type === 'ingreso') {
+                totalIncome += transaction.amount;
+            } else if (transaction.type === 'gasto') {
+                totalExpenses += transaction.amount;
+            }
+        });
+
+        var balance = totalIncome - totalExpenses;
+
+        // actualizo los numeros en pantalla
+        document.getElementById('balanceAmount').textContent = '$' + balance.toLocaleString();
+        document.getElementById('incomeAmount').textContent = '$' + totalIncome.toLocaleString();
+        document.getElementById('expenseAmount').textContent = '$' + totalExpenses.toLocaleString();
+
+        // cambio los colores segun si es positivo o negativo
+        var balanceElement = document.getElementById('balanceAmount');
+        balanceElement.className = 'card-value ' + (balance >= 0 ? 'text-success' : 'text-danger');
+
+        // colores fijos para ingresos y gastos
+        var incomeElement = document.getElementById('incomeAmount');
+        var expenseElement = document.getElementById('expenseAmount');
+        
+        incomeElement.className = 'card-value text-success';
+        expenseElement.className = 'card-value text-danger';
+
+        // actualizar graficos dinamicos
+        updateDynamicCharts();
+
+    } catch(err) {
+        console.error('Error al actualizar datos financieros:', err);
+    }
+}
+
+// actualizar graficos dinamicos con datos reales
+function updateDynamicCharts() {
+    try {
+        var expenseData = analyzeExpensesByCategory();
+        
+        // mapeo de categorias a emojis y colores
+        var categoryInfo = {
+            'alimentacion': { emoji: '🍔', color: '#FF6B6B', name: 'Alimentación' },
+            'transporte': { emoji: '🚗', color: '#4ECDC4', name: 'Transporte' },
+            'entretenimiento': { emoji: '🎬', color: '#45B7D1', name: 'Entretenimiento' },
+            'compras': { emoji: '🛒', color: '#96CEB4', name: 'Compras' },
+            'salario': { emoji: '💰', color: '#FFD93D', name: 'Salario' },
+            'otros': { emoji: '📦', color: '#C7C7C7', name: 'Otros' }
+        };
+
+        updateDonutChart(expenseData, categoryInfo);
+        updateCategoriesList(expenseData, categoryInfo);
+        updateDonutLegend(expenseData, categoryInfo);
+        
+    } catch(err) {
+        console.error('Error al actualizar gráficos dinámicos:', err);
+    }
+}
+
+// actualizar grafico de dona con datos reales
+function updateDonutChart(expenseData, categoryInfo) {
+    try {
         var donutChart = document.getElementById('donutChart');
-        donutChart.addEventListener('click', function() {
-            alert('Distribución de Gastos:\n' +
-                  'Comida: 40% - ' + fmt(expense * 0.4) + '\n' +
-                  'Transporte: 25% - ' + fmt(expense * 0.25) + '\n' +
-                  'Entretenimiento: 20% - ' + fmt(expense * 0.2) + '\n' +
-                  'Otros: 15% - ' + fmt(expense * 0.15));
-        });
-    }
-    
-    // Gráfico de metas completadas interactivo
-    function initGoalsChart() {
-        var goalItems = document.querySelectorAll('.goal-item');
+        var donutTotal = document.querySelector('.donut-total');
         
-        goalItems.forEach(function(item) {
-            item.addEventListener('click', function() {
-                var goal = this.getAttribute('data-goal');
-                var progress = this.getAttribute('data-progress');
-                
-                // Mensajes personalizados para cada meta
-                var messages = {
-                    'ahorro': {
-                        title: 'Ahorro Mensual',
-                        message: 'Has ahorrado el 75% de tu meta mensual.\n\nMeta: $200.000\nActual: ' + fmt(balance) + '\nFaltan: ' + fmt(200000 - balance),
-                        tip: '💡 Consejo: Intenta ahorrar al menos el 20% de tus ingresos.'
-                    },
-                    'gastos': {
-                        title: 'Control de Gastos',
-                        message: 'Tienes un 60% de control sobre tus gastos.\n\nGastos actuales: ' + fmt(expense) + '\nIngresos: ' + fmt(income),
-                        tip: '💡 Consejo: Revisa tus gastos diarios para identificar áreas de mejora.'
-                    },
-                    'inversion': {
-                        title: 'Inversión',
-                        message: '¡Excelente! Tienes un 90% de cumplimiento en inversiones.\n\nBalance de inversión: ' + fmt(balance * 0.9),
-                        tip: '💡 Consejo: Considera diversificar tus inversiones.'
-                    },
-                    'emergencia': {
-                        title: 'Fondo de Emergencia',
-                        message: 'Tu fondo de emergencia está al 45%.\n\nMeta: 6 meses de gastos\nActual: ' + fmt(expense * 6 * 0.45),
-                        tip: '💡 Consejo: Intenta tener al menos 6 meses de gastos ahorrados.'
-                    }
-                };
-                
-                var goalInfo = messages[goal];
-                alert(goalInfo.title + ':\n\n' + goalInfo.message + '\n\n' + goalInfo.tip);
-            });
+        if (!donutChart || !donutTotal) return;
+
+        if (expenseData.categories.length === 0) {
+            // sin gastos - mostrar grafico vacio
+            donutChart.style.background = 'conic-gradient(#e9ecef 0deg 360deg)';
+            donutTotal.textContent = '0%';
+            return;
+        }
+
+        // crear gradiente conico basado en datos reales
+        var gradientParts = [];
+        var currentDegree = 0;
+
+        expenseData.categories.forEach(function(category) {
+            var info = categoryInfo[category.category] || categoryInfo['otros'];
+            var degrees = (category.percentage / 100) * 360;
+            var endDegree = currentDegree + degrees;
             
-            // Animación de las barras de progreso
-            var progressFill = this.querySelector('.progress-fill-small');
-            var percentage = this.getAttribute('data-progress');
-            
-            // Animar la barra después de un pequeño delay
-            setTimeout(function() {
-                progressFill.style.width = percentage + '%';
-            }, 500 + Math.random() * 1000);
+            gradientParts.push(info.color + ' ' + currentDegree + 'deg ' + endDegree + 'deg');
+            currentDegree = endDegree;
         });
+
+        var gradient = 'conic-gradient(' + gradientParts.join(', ') + ')';
+        donutChart.style.background = gradient;
+        donutTotal.textContent = '100%';
+
+        // actualizar el evento click del grafico de dona
+        updateDonutClickEvent(expenseData, categoryInfo);
+
+    } catch(err) {
+        console.error('Error al actualizar gráfico de dona:', err);
     }
+}
+
+// actualizar evento click del grafico de dona con datos reales
+function updateDonutClickEvent(expenseData, categoryInfo) {
+    try {
+        var donutChart = document.getElementById('donutChart');
+        if (!donutChart) return;
+
+        // remover eventos anteriores clonando el elemento
+        var newDonutChart = donutChart.cloneNode(true);
+        donutChart.parentNode.replaceChild(newDonutChart, donutChart);
+
+        // agregar nuevo evento con datos actualizados
+        newDonutChart.addEventListener('click', function() {
+            if (expenseData.categories.length === 0) {
+                alert('No hay gastos registrados aún.\n\nAgrega algunas transacciones para ver la distribución de gastos.');
+                return;
+            }
+
+            var message = 'Distribución de Gastos:\n\n';
+            
+            expenseData.categories.forEach(function(category) {
+                var info = categoryInfo[category.category] || categoryInfo['otros'];
+                message += info.name + ': ' + category.percentage + '% - $' + category.amount.toLocaleString() + '\n';
+            });
+
+            message += '\nTotal gastado: $' + expenseData.totalExpenses.toLocaleString();
+            
+            alert(message);
+        });
+
+    } catch(err) {
+        console.error('Error al actualizar evento click del gráfico:', err);
+    }
+}
+
+// actualizar leyenda del grafico de dona con datos reales
+function updateDonutLegend(expenseData, categoryInfo) {
+    try {
+        var donutLegend = document.getElementById('donutLegend');
+        
+        if (!donutLegend) return;
+
+        if (expenseData.categories.length === 0) {
+            donutLegend.innerHTML = `
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #e9ecef;"></div>
+                    <span>Sin gastos: 0%</span>
+                </div>
+            `;
+            return;
+        }
+
+        var html = '';
+        
+        // mostrar hasta las 4 categorias principales en la leyenda
+        var topCategories = expenseData.categories.slice(0, 4);
+        
+        topCategories.forEach(function(category, index) {
+            var info = categoryInfo[category.category] || categoryInfo['otros'];
+            html += `
+                <div class="legend-item" data-category="${category.category}" data-amount="${category.amount}" data-percentage="${category.percentage}">
+                    <div class="legend-color" style="background-color: ${info.color};"></div>
+                    <span>${info.name}: ${category.percentage}%</span>
+                </div>
+            `;
+        });
+
+        donutLegend.innerHTML = html;
+
+        // agregar eventos click a los elementos de la leyenda
+        var legendItems = donutLegend.querySelectorAll('.legend-item');
+        legendItems.forEach(function(item) {
+            item.addEventListener('click', function() {
+                var categoryKey = this.getAttribute('data-category');
+                var amount = parseInt(this.getAttribute('data-amount'));
+                var percentage = parseInt(this.getAttribute('data-percentage'));
+                var info = categoryInfo[categoryKey] || categoryInfo['otros'];
+                
+                var message = info.name + ':\n\n';
+                message += percentage + '% de tus gastos totales\n';
+                message += 'Monto gastado: $' + amount.toLocaleString() + '\n\n';
+                
+                // calcular el promedio diario estimado
+                var avgDaily = Math.round(amount / 30);
+                message += 'Promedio estimado diario: $' + avgDaily.toLocaleString();
+                
+                alert(message);
+            });
+        });
+
+    } catch(err) {
+        console.error('Error al actualizar leyenda del gráfico:', err);
+    }
+}
+
+// actualizar lista de categorias con datos reales
+function updateCategoriesList(expenseData, categoryInfo) {
+    try {
+        var categoriesList = document.querySelector('.categories-list');
+        var categoriesTotal = document.querySelector('.categories-total strong');
+        
+        if (!categoriesList) return;
+
+        if (expenseData.categories.length === 0) {
+            categoriesList.innerHTML = `
+                <div class="category-item">
+                    <div class="category-icon">📊</div>
+                    <div class="category-info">
+                        <div class="category-name">Sin gastos registrados</div>
+                        <div class="category-amount">$0</div>
+                    </div>
+                    <div class="category-bar">
+                        <div class="category-fill" style="width: 0%; background-color: #e9ecef;"></div>
+                    </div>
+                </div>
+            `;
+            if (categoriesTotal) categoriesTotal.textContent = '$0';
+            return;
+        }
+
+        // mostrar hasta las 4 categorias principales
+        var topCategories = expenseData.categories.slice(0, 4);
+        var html = '';
+
+        topCategories.forEach(function(category) {
+            var info = categoryInfo[category.category] || categoryInfo['otros'];
+            html += `
+                <div class="category-item">
+                    <div class="category-icon">${info.emoji}</div>
+                    <div class="category-info">
+                        <div class="category-name">${info.name}</div>
+                        <div class="category-amount">$${category.amount.toLocaleString()}</div>
+                    </div>
+                    <div class="category-bar">
+                        <div class="category-fill" style="width: ${category.percentage}%; background-color: ${info.color};"></div>
+                    </div>
+                </div>
+            `;
+        });
+
+        categoriesList.innerHTML = html;
+        if (categoriesTotal) {
+            categoriesTotal.textContent = '$' + expenseData.totalExpenses.toLocaleString();
+        }
+
+    } catch(err) {
+        console.error('Error al actualizar lista de categorías:', err);
+    }
+}
+
+// muestra el mensaje de que se guardo
+function showSuccessMessage(message) {
+    var notification = document.createElement('div');
+    notification.className = 'success-notification';
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: var(--primary-color);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        z-index: 1000;
+        animation: slideInRight 0.3s ease-out;
+    `;
     
-    // Inicializar gráficos bonitos
-    initDonutChart();
-    initGoalsChart();
-})();
+    document.body.appendChild(notification);
+    
+    setTimeout(function() {
+        notification.style.animation = 'slideOutRight 0.3s ease-in';
+        setTimeout(function() {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
+}
 
+// Función para actualizar el nombre del usuario en el dashboard
+function updateDashboardUserName() {
+    try {
+        var userName = localStorage.getItem('app_user_name') || 'Usuario';
+        var dashUserNameElement = document.getElementById('dashUserName');
+        if (dashUserNameElement) {
+            dashUserNameElement.textContent = userName;
+        }
+    } catch(err) {
+        console.error('Error al cargar nombre de usuario en dashboard:', err);
+    }
+}
 
+// Ejecutar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    updateDashboardUserName();
+});

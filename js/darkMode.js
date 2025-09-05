@@ -1,24 +1,33 @@
-// Sistema de Dark Mode para BalanceUp
+// Sistema de Dark Mode
+// Este archivo maneja el cambio entre modo claro y oscuro
+
 class DarkModeManager {
     constructor() {
+        // Obtener el tema guardado del navegador o usar 'light' por defecto
         this.theme = localStorage.getItem('theme') || 'light';
         this.init();
     }
 
     init() {
-        // Aplicar tema guardado
+        // Aplicar el tema guardado al cargar la página
         this.applyTheme(this.theme);
         
-        // Agregar listener para cambios de preferencia del sistema
+        // Escuchar cambios en las preferencias del sistema operativo
         this.addSystemPreferenceListener();
     }
 
+    // Cambiar entre modo claro y oscuro
     toggle() {
+        // Cambiar el tema actual
         this.theme = this.theme === 'light' ? 'dark' : 'light';
+        
+        // Aplicar el nuevo tema
         this.applyTheme(this.theme);
+        
+        // Guardar la preferencia en el navegador
         localStorage.setItem('theme', this.theme);
         
-        // Mostrar notificación
+        // Mostrar notificación de cambio
         this.showThemeNotification();
     }
 
@@ -137,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
     darkModeManager = new DarkModeManager();
 });
 
-// Función global para toggle (llamada desde HTML)
+// Función global para cambiar el tema (llamada desde los botones HTML)
 function toggleDarkMode() {
     if (darkModeManager) {
         darkModeManager.toggle();
