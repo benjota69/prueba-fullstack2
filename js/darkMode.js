@@ -1,200 +1,101 @@
-// Sistema de Dark Mode
-// Este archivo maneja el cambio entre modo claro y oscuro
+// JS de dark mode (Cambiar estilo de la página (blanco - negro) )
+// 
 
-class DarkModeManager {
-    constructor() {
-        // Obtener el tema guardado del navegador o usar 'light' por defecto
-        this.theme = localStorage.getItem('theme') || 'light';
-        this.init();
-    }
+// Variables para manejar el tema
+let temaActual = localStorage.getItem('tema') || 'claro';
 
-    init() {
-        // Aplicar el tema guardado al cargar la página
-        this.applyTheme(this.theme);
-        
-        // Escuchar cambios en las preferencias del sistema operativo
-        this.addSystemPreferenceListener();
-    }
-
-    // Cambiar entre modo claro y oscuro
-    toggle() {
-        // Cambiar el tema actual
-        this.theme = this.theme === 'light' ? 'dark' : 'light';
-        
-        // Aplicar el nuevo tema
-        this.applyTheme(this.theme);
-        
-        // Guardar la preferencia en el navegador
-        localStorage.setItem('theme', this.theme);
-        
-        // Mostrar notificación de cambio
-        this.showThemeNotification();
-    }
-
-    applyTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        
-        // Actualizar iconos del botón
-        this.updateButtonIcons(theme);
-        
-        // Actualizar meta theme-color para móviles
-        this.updateMetaThemeColor(theme);
-    }
-
-    updateButtonIcons(theme) {
-        const sunIcon = document.querySelector('.dark-mode-toggle .sun-icon');
-        const moonIcon = document.querySelector('.dark-mode-toggle .moon-icon');
-        
-        if (sunIcon && moonIcon) {
-            if (theme === 'dark') {
-                sunIcon.style.display = 'inline-block';
-                moonIcon.style.display = 'none';
-            } else {
-                sunIcon.style.display = 'none';
-                moonIcon.style.display = 'inline-block';
-            }
-        }
-    }
-
-    updateMetaThemeColor(theme) {
-        let metaThemeColor = document.querySelector('meta[name="theme-color"]');
-        
-        if (!metaThemeColor) {
-            metaThemeColor = document.createElement('meta');
-            metaThemeColor.name = 'theme-color';
-            document.head.appendChild(metaThemeColor);
-        }
-        
-        metaThemeColor.content = theme === 'dark' ? '#2a2a2a' : '#ffffff';
-    }
-
-    addSystemPreferenceListener() {
-        // Detectar preferencia del sistema
-        if (window.matchMedia) {
-            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-            
-            mediaQuery.addEventListener('change', (e) => {
-                // Solo cambiar automáticamente si no hay tema guardado
-                if (!localStorage.getItem('theme')) {
-                    this.theme = e.matches ? 'dark' : 'light';
-                    this.applyTheme(this.theme);
-                }
-            });
-        }
-    }
-
-    showThemeNotification() {
-        const theme = this.theme;
-        const message = theme === 'dark' ? 'Modo oscuro activado' : 'Modo claro activado';
-        const icon = theme === 'dark' ? '🌙' : '☀️';
-        
-        // Crear notificación
-        const notification = document.createElement('div');
-        notification.className = 'theme-notification';
-        notification.innerHTML = `
-            <span class="theme-icon">${icon}</span>
-            <span class="theme-text">${message}</span>
-        `;
-        
-        // Estilos de la notificación
-        notification.style.cssText = `
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            background: var(--primary-color);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px var(--shadow-color);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            animation: slideInRight 0.3s ease-out;
-            max-width: 250px;
-        `;
-        
-        document.body.appendChild(notification);
-        
-        // Remover notificación después de 3 segundos
-        setTimeout(() => {
-            notification.style.animation = 'slideOutRight 0.3s ease-in';
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 300);
-        }, 3000);
-    }
-
-    // Método para obtener el tema actual
-    getCurrentTheme() {
-        return this.theme;
-    }
-
-    // Método para verificar si está en modo oscuro
-    isDarkMode() {
-        return this.theme === 'dark';
-    }
-}
-
-// Inicializar el manager cuando el DOM esté listo
-let darkModeManager;
-
+// Cuando carga la página, aplicar el tema guardado
 document.addEventListener('DOMContentLoaded', function() {
-    darkModeManager = new DarkModeManager();
+    aplicarTema(temaActual);
 });
 
-// Función global para cambiar el tema (llamada desde los botones HTML)
-function toggleDarkMode() {
-    if (darkModeManager) {
-        darkModeManager.toggle();
+// Función para cambiar el tema
+function cambiarTema() {
+    // Cambiar entre claro y oscuro
+    temaActual = temaActual === 'claro' ? 'oscuro' : 'claro';
+    
+    // Aplicar el nuevo tema
+    aplicarTema(temaActual);
+    
+    // Guardar en el navegador
+    localStorage.setItem('tema', temaActual);
+    
+    // Mostrar mensaje
+    mostrarCambioTema();
+}
+
+// Aplicar el tema a la página
+function aplicarTema(tema) {
+    if (tema === 'oscuro') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+        document.documentElement.setAttribute('data-theme', 'light');
     }
+    
+    // Cambiar los iconos del botón
+    cambiarIconos(tema);
 }
 
-// Función para obtener el tema actual
-function getCurrentTheme() {
-    return darkModeManager ? darkModeManager.getCurrentTheme() : 'light';
-}
-
-// Función para verificar si está en modo oscuro
-function isDarkMode() {
-    return darkModeManager ? darkModeManager.isDarkMode() : false;
-}
-
-// Agregar estilos de animación para las notificaciones
-const darkModeStyles = document.createElement('style');
-darkModeStyles.textContent = `
-    @keyframes slideInRight {
-        from { 
-            transform: translateX(100%); 
-            opacity: 0; 
-        }
-        to { 
-            transform: translateX(0); 
-            opacity: 1; 
+// Cambiar los iconos del botón de tema
+function cambiarIconos(tema) {
+    const iconoSol = document.querySelector('.dark-mode-toggle .sun-icon');
+    const iconoLuna = document.querySelector('.dark-mode-toggle .moon-icon');
+    
+    // También buscar en los botones de login
+    const iconoSollogin = document.querySelector('.dark-mode-toggle-login .sun-icon');
+    const iconoLunalogin = document.querySelector('.dark-mode-toggle-login .moon-icon');
+    
+    if (iconoSol && iconoLuna) {
+        if (tema === 'oscuro') {
+            iconoSol.style.display = 'inline-block';
+            iconoLuna.style.display = 'none';
+        } else {
+            iconoSol.style.display = 'none';
+            iconoLuna.style.display = 'inline-block';
         }
     }
     
-    @keyframes slideOutRight {
-        from { 
-            transform: translateX(0); 
-            opacity: 1; 
+    if (iconoSollogin && iconoLunalogin) {
+        if (tema === 'oscuro') {
+            iconoSollogin.style.display = 'inline-block';
+            iconoLunalogin.style.display = 'none';
+        } else {
+            iconoSollogin.style.display = 'none';
+            iconoLunalogin.style.display = 'inline-block';
         }
-        to { 
-            transform: translateX(100%); 
-            opacity: 0; 
+    }
+}
+
+// Mostrar mensaje cuando cambia el tema
+function mostrarCambioTema() {
+    const mensaje = temaActual === 'oscuro' ? 'Modo oscuro activado 🌙' : 'Modo claro activado ☀️';
+    
+    // Crear el mensaje
+    const notificacion = document.createElement('div');
+    notificacion.textContent = mensaje;
+    notificacion.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        background: var(--primary-color);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        z-index: 1000;
+        font-size: 14px;
+    `;
+    
+    document.body.appendChild(notificacion);
+    
+    // Quitar el mensaje después de 2 segundos
+    setTimeout(() => {
+        if (notificacion.parentNode) {
+            notificacion.parentNode.removeChild(notificacion);
         }
-    }
+    }, 2000);
+}
 
-    .theme-notification .theme-icon {
-        font-size: 16px;
-    }
-
-    .theme-notification .theme-text {
-        font-weight: 500;
-    }
-`;
-
-document.head.appendChild(darkModeStyles);
+// Función que se llama desde los botones HTML
+function toggleDarkMode() {
+    cambiarTema();
+}

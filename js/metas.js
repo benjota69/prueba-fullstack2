@@ -1,12 +1,13 @@
 // Módulo de Metas de Ahorro 
 // Este archivo maneja todo lo relacionado con las metas de ahorro del usuario
 
+
 // Variables globales para recordar qué meta estamos editando
 let currentGoalId = null;  // ID de la meta a la que queremos agregar dinero
 
 // Cuando la página se carga completamente, ejecutamos estas funciones
 document.addEventListener('DOMContentLoaded', function() {
-    loadGoals();        // Cargar las metas guardadas del usuario
+    loadmetas();        // Cargar las metas guardadas del usuario
     setupForm();        // Configurar el formulario para crear nuevas metas
     setDefaultDate();   // Poner una fecha por defecto (1 año desde hoy)
 });
@@ -68,7 +69,7 @@ function saveGoal(e) {
     setDefaultDate();  // Poner la fecha por defecto otra vez
     
     // Recargar la lista de metas para mostrar la nueva
-    loadGoals();
+    loadmetas();
     
     // Mostrar mensaje de éxito
     alert('Meta creada!');
@@ -77,38 +78,38 @@ function saveGoal(e) {
 // Guardar la meta en el localStorage del navegador (para que persista)
 function saveToStorage(goal) {
     // Obtener todas las metas guardadas (si no hay ninguna, usar array vacío)
-    let goals = JSON.parse(localStorage.getItem('savings_goals') || '[]');
+    let metas = JSON.parse(localStorage.getItem('savings_metas') || '[]');
     
     // Agregar la nueva meta al inicio de la lista
-    goals.unshift(goal);
+    metas.unshift(goal);
     
     // Guardar todas las metas actualizadas en el navegador
-    localStorage.setItem('savings_goals', JSON.stringify(goals));
+    localStorage.setItem('savings_metas', JSON.stringify(metas));
 }
 
 // Cargar todas las metas guardadas del navegador
-function loadGoals() {
+function loadmetas() {
     // Obtener las metas del localStorage (si no hay ninguna, usar array vacío)
-    const goals = JSON.parse(localStorage.getItem('savings_goals') || '[]');
+    const metas = JSON.parse(localStorage.getItem('savings_metas') || '[]');
     
     // Mostrar las metas en pantalla
-    displayGoals(goals);
+    displaymetas(metas);
 }
 
 // Mostrar todas las metas en pantalla
-function displayGoals(goals) {
-    const container = document.getElementById('goalsList');  // Buscar el contenedor en el HTML
+function displaymetas(metas) {
+    const container = document.getElementById('metasList');  // Buscar el contenedor en el HTML
     if (!container) return;  // Si no existe, salir de la función
     
     // Si no hay metas, mostrar mensaje
-    if (goals.length === 0) {
+    if (metas.length === 0) {
         container.innerHTML = '<p>No hay metas. Crea una nueva!</p>';
         return;
     }
     
     // Crear HTML para cada meta
     let html = '';
-    goals.forEach(goal => {
+    metas.forEach(goal => {
         // Calcular el porcentaje de progreso
         const progress = Math.round((goal.savedAmount / goal.amount) * 100);
         // Calcular cuánto dinero falta
@@ -148,16 +149,16 @@ function addMoney(goalId) {
     }
     
     // Obtener todas las metas del navegador
-    let goals = JSON.parse(localStorage.getItem('savings_goals') || '[]');
+    let metas = JSON.parse(localStorage.getItem('savings_metas') || '[]');
     
     // Buscar la meta específica por su ID
-    const goalIndex = goals.findIndex(goal => goal.id === goalId);
+    const goalIndex = metas.findIndex(goal => goal.id === goalId);
     
     // Si encontramos la meta, agregar el dinero
     if (goalIndex !== -1) {
-        goals[goalIndex].savedAmount += parseFloat(amount);  // Sumar el dinero nuevo
-        localStorage.setItem('savings_goals', JSON.stringify(goals));  // Guardar cambios
-        loadGoals();  // Recargar la lista para mostrar los cambios
+        metas[goalIndex].savedAmount += parseFloat(amount);  // Sumar el dinero nuevo
+        localStorage.setItem('savings_metas', JSON.stringify(metas));  // Guardar cambios
+        loadmetas();  // Recargar la lista para mostrar los cambios
         alert('Dinero agregado!');
     }
 }
@@ -166,11 +167,11 @@ function addMoney(goalId) {
 function deleteGoal(goalId) {
     // Preguntar al usuario si está seguro de eliminar
     if (confirm('¿Eliminar esta meta?')) {
-        let goals = JSON.parse(localStorage.getItem('savings_goals') || '[]');
+        let metas = JSON.parse(localStorage.getItem('savings_metas') || '[]');
         // Filtrar las metas para quitar la que queremos eliminar
-        goals = goals.filter(goal => goal.id !== goalId);
-        localStorage.setItem('savings_goals', JSON.stringify(goals));
-        loadGoals();  // Recargar la lista para mostrar los cambios
+        metas = metas.filter(goal => goal.id !== goalId);
+        localStorage.setItem('savings_metas', JSON.stringify(metas));
+        loadmetas();  // Recargar la lista para mostrar los cambios
         alert('Meta eliminada');
     }
 }

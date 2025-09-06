@@ -9,7 +9,6 @@
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <title>Análisis Financiero - BalanceUp</title>
     <link rel="stylesheet" href="static/style/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="app-container">
@@ -29,7 +28,7 @@
                     <h2>BalanceUp</h2>
                 </div>
                 <!-- Botón de dark mode en el header del sidebar -->
-                <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Cambiar modo oscuro">
+                <button class="dark-mode-toggle" onclick="cambiarTema()" title="Cambiar modo oscuro">
                     <span class="sun-icon">☀️</span>
                     <span class="moon-icon">🌙</span>
                 </button>
@@ -43,25 +42,25 @@
                     </a>
                 </li>
                 <li>
-                    <a href="transactions.html">
+                    <a href="transacciones.html">
                         <span>💱</span>
                         Transacciones
                     </a>
                 </li>
                 <li>
-                    <a href="goals.html">
+                    <a href="metas.html">
                         <span>🎯</span>
                         Metas de Ahorro
                     </a>
                 </li>
                 <li>
-                    <a href="payment-methods.html">
+                    <a href="metodoPago.html">
                         <span>💳</span>
                         Métodos de Pago
                     </a>
                 </li>
                 <li class="active">
-                    <a href="analytics.html">
+                    <a href="analisis.html">
                         <span>📈</span>
                         Análisis
                     </a>
@@ -70,10 +69,9 @@
             
             <div class="sidebar-footer">
                 <div class="user-info">
-                    <span>👤</span>
                     <span id="userName">Usuario</span>
                 </div>
-                <button class="logout-btn" onclick="logout()">
+                <button class="logout-btn" onclick="salirDeLaApp()">
                     <span>🚪</span>
                     Cerrar Sesión
                 </button>
@@ -82,18 +80,19 @@
 
         <!-- Contenido principal -->
         <div class="page-content">
+            <div class="container-fluid">
             <!-- Header del módulo -->
-            <div class="analytics-header">
-                <div class="analytics-title-section">
-                    <div class="analytics-icon">
+            <div class="analisis-header">
+                <div class="analisis-title-section">
+                    <div class="analisis-icon">
                         <span>📊</span>
                     </div>
-                    <div class="analytics-text">
-                        <h1 class="analytics-main-title">Análisis Financiero</h1>
-                        <p class="analytics-subtitle">Visualiza y analiza tus patrones de gasto</p>
+                    <div class="analisis-text">
+                        <h1 class="analisis-main-title">Análisis Financiero</h1>
+                        <p class="analisis-subtitle">Visualiza y analiza tus patrones de gasto</p>
                     </div>
                 </div>
-                <div class="analytics-filter">
+                <div class="analisis-filter">
                     <select class="form-select month-filter" id="monthFilter">
                         <option value="1">Enero</option>
                         <option value="2">Febrero</option>
@@ -112,7 +111,7 @@
             </div>
 
             <!-- Tarjetas de resumen -->
-            <div class="analytics-summary-cards">
+            <div class="analisis-summary-cards">
                 <div class="summary-card">
                     <div class="card-icon">
                         <span class="text-success">📈</span>
@@ -155,10 +154,10 @@
             </div>
 
             <!-- Gráficos y análisis -->
-            <div class="analytics-charts-section">
+            <div class="analisis-charts-section">
                 <div class="row">
                     <!-- Gráfico de gastos por categoría -->
-                    <div class="col-lg-6 mb-4">
+                    <div class="col-lg-8 mx-auto mb-4">
                         <div class="chart-card">
                             <h3 class="chart-title">Gastos por Categoría</h3>
                             <div class="donut-chart-container">
@@ -189,15 +188,6 @@
                         </div>
                     </div>
 
-                    <!-- Gráfico de tendencias mensuales -->
-                    <div class="col-lg-6 mb-4">
-                        <div class="chart-card">
-                            <h3 class="chart-title">Tendencia de Gastos</h3>
-                            <div class="trend-chart-container">
-                                <canvas id="trendChart" width="400" height="200"></canvas>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Análisis de patrones -->
@@ -240,12 +230,13 @@
                     </div>
                 </div>
             </div>
+            </div>
         </div>
     </div>
 
     <script src="js/darkMode.js"></script>
     <script src="js/common.js"></script>
     <script src="js/sidebar.js"></script>
-    <script src="js/analytics.js"></script>
+    <script src="js/analisis.js"></script>
 </body>
 </html>

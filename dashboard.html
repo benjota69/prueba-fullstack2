@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,7 +28,7 @@
                     <h2>BalanceUp</h2>
                 </div>
                 <!-- Botón de dark mode en el header del sidebar -->
-                <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Cambiar modo oscuro">
+                <button class="dark-mode-toggle" onclick="cambiarTema()" title="Cambiar modo oscuro">
                     <span class="sun-icon">☀️</span>
                     <span class="moon-icon">🌙</span>
                 </button>
@@ -42,25 +42,25 @@
                     </a>
                 </li>
                 <li>
-                    <a href="transactions.html">
+                    <a href="transacciones.html">
                         <span>💱</span>
                         Transacciones
                     </a>
                 </li>
                 <li>
-                    <a href="goals.html">
+                    <a href="metas.html">
                         <span>🎯</span>
                         Metas de Ahorro
                     </a>
                 </li>
                 <li>
-                    <a href="payment-methods.html">
+                    <a href="metodoPago.html">
                         <span>💳</span>
                         Métodos de Pago
                     </a>
                 </li>
                 <li>
-                    <a href="analytics.html">
+                    <a href="analisis.html">
                         <span>📈</span>
                         Análisis
                     </a>
@@ -69,10 +69,9 @@
             
             <div class="sidebar-footer">
                 <div class="user-info">
-                    <span>👤</span>
                     <span id="userName">Usuario</span>
                 </div>
-                <button class="logout-btn" onclick="logout()">
+                <button class="logout-btn" onclick="salirDeLaApp()">
                     <span>🚪</span>
                     Cerrar Sesión
                 </button>
@@ -206,14 +205,14 @@
                     <!-- Metas de Ahorro -->
                     <div class="col-md-4">
                         <div class="summary-card" style="position: relative;">
-                            <div class="goals-counter" id="goalsCounter">
+                            <div class="metas-counter" id="metasCounter">
                                 <!-- Contador total de metas -->
                             </div>
                             <div class="card-body text-center">
                                 <div class="summary-icon">
                                     <span>🎯</span>
                                 </div>
-                                <div id="goalSummaryContent">
+                                <div id="metasummaryContent">
                                     <!-- Contenido dinámico de metas -->
                                 </div>
                             </div>
@@ -221,11 +220,11 @@
                     </div>
                 </div>
 
-                <div class="chart-card dash-transactions">
+                <div class="chart-card dash-transacciones">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-2">
                             <h2 class="h6 mb-0 dash-section-title">Últimas transacciones</h2>
-                            <a class="small text-decoration-none dash-link" href="transactions.html">Ver todo</a>
+                            <a class="small text-decoration-none dash-link" href="transacciones.html">Ver todo</a>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-sm align-middle mb-0" style="background-color: var(--card-bg); color: var(--text-primary);">
@@ -296,7 +295,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-success" onclick="saveTransaction()">Guardar Transacción</button>
+                    <button type="button" class="btn btn-success" onclick="guardarTransaccion()">Guardar Transacción</button>
                 </div>
             </div>
         </div>
@@ -307,5 +306,3 @@
     <script src="js/dashboard.js"></script>
 </body>
 </html>
-
-

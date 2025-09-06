@@ -28,7 +28,7 @@
                     <h2>BalanceUp</h2>
                 </div>
                 <!-- Botón de dark mode en el header del sidebar -->
-                <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Cambiar modo oscuro">
+                <button class="dark-mode-toggle" onclick="cambiarTema()" title="Cambiar modo oscuro">
                     <span class="sun-icon">☀️</span>
                     <span class="moon-icon">🌙</span>
                 </button>
@@ -42,25 +42,25 @@
                     </a>
                 </li>
                 <li>
-                    <a href="transactions.html">
+                    <a href="transacciones.html">
                         <span>💱</span>
                         Transacciones
                     </a>
                 </li>
                 <li class="active">
-                    <a href="goals.html">
+                    <a href="metas.html">
                         <span>🎯</span>
                         Metas de Ahorro
                     </a>
                 </li>
                 <li>
-                    <a href="payment-methods.html">
+                    <a href="metodoPago.html">
                         <span>💳</span>
                         Métodos de Pago
                     </a>
                 </li>
                 <li>
-                    <a href="analytics.html">
+                    <a href="analisis.html">
                         <span>📈</span>
                         Análisis
                     </a>
@@ -69,10 +69,9 @@
             
             <div class="sidebar-footer">
                 <div class="user-info">
-                    <span>👤</span>
                     <span id="userName">Usuario</span>
                 </div>
-                <button class="logout-btn" onclick="logout()">
+                <button class="logout-btn" onclick="salirDeLaApp()">
                     <span>🚪</span>
                     Cerrar Sesión
                 </button>
@@ -81,15 +80,16 @@
 
         <!-- Contenido principal -->
         <div class="page-content">
+            <div class="container-fluid">
             <!-- Header del módulo -->
-            <div class="analytics-header">
-                <div class="analytics-title-section">
-                    <div class="analytics-icon">
+            <div class="analisis-header">
+                <div class="analisis-title-section">
+                    <div class="analisis-icon">
                         <span>🎯</span>
                     </div>
-                    <div class="analytics-text">
-                        <h1 class="analytics-main-title">Metas de Ahorro</h1>
-                        <p class="analytics-subtitle">Define y alcanza tus objetivos financieros</p>
+                    <div class="analisis-text">
+                        <h1 class="analisis-main-title">Metas de Ahorro</h1>
+                        <p class="analisis-subtitle">Define y alcanza tus objetivos financieros</p>
                     </div>
                 </div>
             </div>
@@ -102,7 +102,7 @@
                         <div class="card-body">
                             <h3 class="card-title">Nueva Meta de Ahorro</h3>
                             
-                            <!-- Formulario que se conecta con js/goals.js -->
+                            <!-- Formulario que se conecta con js/metas.js -->
                             <form id="goalForm">
                                 <div class="mb-3">
                                     <label for="goalName" class="form-label">Nombre de la Meta</label>
@@ -141,8 +141,8 @@
                         <div class="card-body">
                             <h3 class="card-title text-center">Mis Metas de Ahorro</h3>
                             
-                            <!-- Contenedor donde js/goals.js muestra las metas -->
-                            <div id="goalsList">
+                            <!-- Contenedor donde js/metas.js muestra las metas -->
+                            <div id="metasList">
                                 <div class="empty-state">
                                     <div class="empty-icon">🎯</div>
                                     <p class="empty-text">No tienes metas definidas</p>
@@ -153,6 +153,7 @@
                     </div>
                 </div>
             </div>
+            </div>
         </div>
     </div>
 
@@ -160,6 +161,6 @@
     <script src="js/darkMode.js"></script>  <!-- Maneja el modo oscuro -->
     <script src="js/common.js"></script>    <!-- Funciones comunes -->
     <script src="js/sidebar.js"></script>   <!-- Funcionalidad del sidebar -->
-    <script src="js/goals.js"></script>     <!-- Lógica principal de metas -->
+    <script src="js/metas.js"></script>     <!-- Lógica principal de metas -->
 </body>
 </html>

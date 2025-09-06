@@ -9,18 +9,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Configurar el filtro de mes para cambiar análisis
     document.getElementById('monthFilter').addEventListener('change', function() {
-        updateAnalytics(this.value);
+        updateanalisis(this.value);
     });
     
     // Inicializar análisis con el mes actual
-    updateAnalytics(currentMonth);
+    updateanalisis(currentMonth);
     
     // Crear gráfico de tendencias de los últimos meses
     createTrendChart();
 });
 
 // Función principal para actualizar todo el análisis cuando cambia el mes
-function updateAnalytics(month) {
+function updateanalisis(month) {
     // Obtener datos simulados del mes seleccionado
     const monthData = getMonthData(month);
     

@@ -1,39 +1,39 @@
-// Módulo de Funciones Comunes
-// Este archivo contiene funciones compartidas entre todas las páginas
+// Funciones que se usarán en todas las paginas (modulos)
+// Las funciones basicamente son cuando se verifica que se sale, revisa si está logeado, y muestra el nombre en el sidebar
 
-// Función para cerrar sesión
-function logout() {
+// Función para salir de la aplicación
+function salirDeLaApp() {
     try { 
         localStorage.removeItem('demo_logged_in'); 
     } catch(err) {}
     window.location.href = 'login.html';
 }
 
-// Verificar si el usuario está logueado (protección básica)
-function checkAuth() {
+// Revisar si el usuario ya hizo login
+function revisarSiEstaLogueado() {
     try {
-        var logged = localStorage.getItem('demo_logged_in');
-        if (!logged) {
+        var yaEntro = localStorage.getItem('demo_logged_in');
+        if (!yaEntro) {
             window.location.href = 'login.html';
         }
     } catch(err) {}
 }
 
-// Actualizar nombre del usuario en el sidebar
-function updateUserName() {
+// Poner el nombre del usuario en el sidebar
+function ponerNombreEnSidebar() {
     try {
-        var userName = localStorage.getItem('app_user_name') || 'Usuario';
-        var userNameElement = document.getElementById('userName');
-        if (userNameElement) {
-            userNameElement.textContent = userName;
+        var nombreDelUsuario = localStorage.getItem('app_user_name') || 'Usuario';
+        var dondeVaElNombre = document.getElementById('userName');
+        if (dondeVaElNombre) {
+            dondeVaElNombre.textContent = nombreDelUsuario;
         }
     } catch(err) {
-        console.error('Error al cargar nombre de usuario:', err);
+        console.error('No pudimos mostrar el nombre:', err);
     }
 }
 
-// Inicializar funciones comunes cuando se carga la página
+// Cuando se carga la página, hacer esto
 document.addEventListener('DOMContentLoaded', function() {
-    checkAuth();
-    updateUserName();
+    revisarSiEstaLogueado();
+    ponerNombreEnSidebar();
 });

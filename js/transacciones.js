@@ -3,69 +3,69 @@
 
 // Cuando la página se carga, ejecutar estas funciones
 document.addEventListener('DOMContentLoaded', function() {
-    loadTransactions();  // Cargar transacciones existentes
-    setupForm();         // Configurar el formulario
-    setTodayDate();      // Poner fecha de hoy por defecto
-    setupFilters();      // Configurar filtros
-    createSampleData();  // Crear datos de ejemplo si no existen
+    createSampleData();             // Crear datos de ejemplo si no existen
+    cargarTodasLasTransacciones();  // Cargar transacciones existentes
+    configurarFormulario();         // Configurar el formulario
+    ponerFechaDeHoy();              // Poner fecha de hoy por defecto
+    configurarFiltros();            // Configurar filtros
 });
 
 // Configurar formulario
-function setupForm() {
-    const form = document.getElementById('transactionForm');
-    const typeSelect = document.getElementById('transactionType');
+function configurarFormulario() {
+    const formulario = document.getElementById('transactionForm');
+    const selectorDeTipo = document.getElementById('transactionType');
     
-    if (form) {
-        form.addEventListener('submit', saveTransaction);
+    if (formulario) {
+        formulario.addEventListener('submit', guardarTransaccion);
     }
     
-    if (typeSelect) {
-        typeSelect.addEventListener('change', showCardFields);
+    if (selectorDeTipo) {
+        selectorDeTipo.addEventListener('change', mostrarCamposDeTarjeta);
     }
 }
 
 // Poner fecha de hoy
-function setTodayDate() {
-    const dateInput = document.getElementById('transactionDate');
-    if (dateInput) {
-        dateInput.value = new Date().toISOString().split('T')[0];
+function ponerFechaDeHoy() {
+    const campoFecha = document.getElementById('transactionDate');
+    if (campoFecha) {
+        campoFecha.value = new Date().toISOString().split('T')[0];
     }
 }
 
 // Mostrar u ocultar campos según el tipo de transacción
-function showCardFields() {
-    const type = document.getElementById('transactionType').value;
-    const cardGroup = document.getElementById('cardSelectionGroup');
-    const commerceGroup = document.getElementById('commerceGroup');
+function mostrarCamposDeTarjeta() {
+    const queTipo = document.getElementById('transactionType').value;
+    const grupoTarjetas = document.getElementById('cardSelectionGroup');
+    const grupoComercios = document.getElementById('commerceGroup');
     
     // Si es una compra, mostrar campos de tarjeta y comercio
-    if (type === 'compra') {
-        cardGroup.style.display = 'block';
-        commerceGroup.style.display = 'block';
-        loadCards();  // Cargar las tarjetas disponibles
+    if (queTipo === 'compra') {
+        grupoTarjetas.style.display = 'block';
+        grupoComercios.style.display = 'block';
+        cargarTarjetas();  // Cargar las tarjetas disponibles
     } else {
         // Para ingresos y gastos, ocultar estos campos
-        cardGroup.style.display = 'none';
-        commerceGroup.style.display = 'none';
+        grupoTarjetas.style.display = 'none';
+        grupoComercios.style.display = 'none';
     }
 }
 
 // Cargar las tarjetas registradas en el selector
-function loadCards() {
-    const cardSelect = document.getElementById('transactionCard');
-    if (!cardSelect) return;
+function cargarTarjetas() {
+    const selectorDeTarjetas = document.getElementById('transactionCard');
+    if (!selectorDeTarjetas) return;
     
     try {
         // Obtener tarjetas guardadas en el navegador
-        const cards = JSON.parse(localStorage.getItem('registered_cards') || '[]');
-        cardSelect.innerHTML = '<option value="">Seleccionar tarjeta</option>';
+        const tarjetasGuardadas = JSON.parse(localStorage.getItem('registered_cards') || '[]');
+        selectorDeTarjetas.innerHTML = '<option value="">Seleccionar tarjeta</option>';
         
         // Crear opciones para cada tarjeta (mostrando solo últimos 4 dígitos)
-        cards.forEach(card => {
-            const option = document.createElement('option');
-            option.value = card.id;
-            option.textContent = `${card.alias} (••••${card.number.slice(-4)})`;
-            cardSelect.appendChild(option);
+        tarjetasGuardadas.forEach(unaTarjeta => {
+            const nuevaOpcion = document.createElement('option');
+            nuevaOpcion.value = unaTarjeta.id;
+            nuevaOpcion.textContent = `${unaTarjeta.alias} (••••${unaTarjeta.number.slice(-4)})`;
+            selectorDeTarjetas.appendChild(nuevaOpcion);
         });
     } catch (error) {
         console.error('Error al cargar tarjetas:', error);
@@ -73,11 +73,11 @@ function loadCards() {
 }
 
 // Guardar una nueva transacción
-function saveTransaction(e) {
-    e.preventDefault();
+function guardarTransaccion(evento) {
+    evento.preventDefault();
     
     // Obtener todos los datos del formulario
-    const data = {
+    const datosDelFormulario = {
         type: document.getElementById('transactionType').value,
         amount: parseFloat(document.getElementById('transactionAmount').value),
         category: document.getElementById('transactionCategory').value,
@@ -88,63 +88,63 @@ function saveTransaction(e) {
     };
     
     // Validar que todos los datos sean correctos
-    if (!validateTransaction(data)) {
+    if (!validarTransaccion(datosDelFormulario)) {
         return;
     }
     
     // Crear el objeto de la transacción
-    const transaction = {
+    const nuevaTransaccion = {
         id: Date.now(),  // ID único
-        ...data,
+        ...datosDelFormulario,
         createdAt: new Date().toISOString()
     };
     
     // Guardar en el navegador
-    saveToStorage(transaction);
+    guardarEnElNavegador(nuevaTransaccion);
     
     // Limpiar el formulario y recargar la lista
     document.getElementById('transactionForm').reset();
-    setTodayDate();
-    showCardFields();
-    loadTransactions();
+    ponerFechaDeHoy();
+    mostrarCamposDeTarjeta();
+    cargarTodasLasTransacciones();
     
     alert('Transacción guardada exitosamente!');
 }
 
 // Validar transacción
-function validateTransaction(data) {
-    if (!data.type) {
+function validarTransaccion(datosParaValidar) {
+    if (!datosParaValidar.type) {
         alert('Selecciona el tipo de transacción');
         return false;
     }
     
-    if (!data.amount || data.amount <= 0) {
+    if (!datosParaValidar.amount || datosParaValidar.amount <= 0) {
         alert('El monto debe ser mayor a 0');
         return false;
     }
     
-    if (!data.category) {
+    if (!datosParaValidar.category) {
         alert('Selecciona una categoría');
         return false;
     }
     
-    if (!data.description.trim()) {
+    if (!datosParaValidar.description.trim()) {
         alert('Escribe una descripción');
         return false;
     }
     
-    if (!data.date) {
+    if (!datosParaValidar.date) {
         alert('Selecciona una fecha');
         return false;
     }
     
     // Validaciones para compra
-    if (data.type === 'compra') {
-        if (!data.cardId) {
+    if (datosParaValidar.type === 'compra') {
+        if (!datosParaValidar.cardId) {
             alert('Selecciona una tarjeta');
             return false;
         }
-        if (!data.commerceName.trim()) {
+        if (!datosParaValidar.commerceName.trim()) {
             alert('Escribe el nombre del comercio');
             return false;
         }
@@ -154,39 +154,39 @@ function validateTransaction(data) {
 }
 
 // Guardar en localStorage
-function saveToStorage(transaction) {
+function guardarEnElNavegador(transaccionNueva) {
     try {
-        let transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
-        transactions.unshift(transaction);
-        localStorage.setItem('transactions', JSON.stringify(transactions));
+        let listaDeTransacciones = JSON.parse(localStorage.getItem('transacciones') || '[]');
+        listaDeTransacciones.unshift(transaccionNueva);
+        localStorage.setItem('transacciones', JSON.stringify(listaDeTransacciones));
     } catch (error) {
         console.error('Error al guardar:', error);
     }
 }
 
 // Cargar transacciones
-function loadTransactions() {
+function cargarTodasLasTransacciones() {
     try {
-        const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
-        displayTransactions(transactions);
+        const todasLasTransacciones = JSON.parse(localStorage.getItem('transacciones') || '[]');
+        displaytransaccionesHorizontal(todasLasTransacciones);
     } catch (error) {
         console.error('Error al cargar:', error);
     }
 }
 
 // Mostrar la lista de transacciones en la página
-function displayTransactions(transactions) {
-    const container = document.getElementById('transactionsList');
-    if (!container) return;
+function mostrarTransaccionesEnPantalla(listaTransacciones) {
+    const dondeVanLasTransacciones = document.getElementById('transaccionesList');
+    if (!dondeVanLasTransacciones) return;
     
     // Si no hay transacciones, mostrar mensaje
-    if (transactions.length === 0) {
-        container.innerHTML = '<p class="text-center text-muted">No hay transacciones</p>';
+    if (listaTransacciones.length === 0) {
+        dondeVanLasTransacciones.innerHTML = '<p class="text-center text-muted">No hay transacciones</p>';
         return;
     }
     
     // Crear HTML para cada transacción
-    const html = transactions.map(t => {
+    const html = listaTransacciones.map(t => {
         // Definir colores según el tipo (verde para ingresos, rojo para gastos/compras)
         const color = t.type === 'ingreso' ? 'text-success' : 'text-danger';
         const sign = t.type === 'ingreso' ? '+' : '-';
@@ -217,7 +217,7 @@ function displayTransactions(transactions) {
     }).join('');
     
     // Mostrar todas las transacciones en la página
-    container.innerHTML = html;
+    dondeVanLasTransacciones.innerHTML = html;
 }
 
 // Buscar una tarjeta específica por su ID
@@ -232,77 +232,73 @@ function getCardById(cardId) {
     }
 }
 
-// Configurar filtros cuando se carga la página
-document.addEventListener('DOMContentLoaded', function() {
-    setupFilters();
-});
 
 // Configurar los filtros
-function setupFilters() {
-    const applyFiltersBtn = document.getElementById('applyFilters');
-    const clearFiltersBtn = document.getElementById('clearFilters');
+function configurarFiltros() {
+    const botonAplicarFiltros = document.getElementById('applyFilters');
+    const botonLimpiarFiltros = document.getElementById('clearFilters');
     
-    if (applyFiltersBtn) {
-        applyFiltersBtn.addEventListener('click', applyFilters);
+    if (botonAplicarFiltros) {
+        botonAplicarFiltros.addEventListener('click', aplicarFiltros);
     }
     
-    if (clearFiltersBtn) {
-        clearFiltersBtn.addEventListener('click', clearFilters);
+    if (botonLimpiarFiltros) {
+        botonLimpiarFiltros.addEventListener('click', limpiarFiltros);
     }
 }
 
 // Aplicar filtros
-function applyFilters() {
-    const filterType = document.getElementById('filterType').value;
-    const filterCategory = document.getElementById('filterCategory').value;
-    const filterDateFrom = document.getElementById('filterDateFrom').value;
-    const filterDateTo = document.getElementById('filterDateTo').value;
+function aplicarFiltros() {
+    const filtroTipo = document.getElementById('filterType').value;
+    const filtroCategoria = document.getElementById('filterCategory').value;
+    const filtroFechaDesde = document.getElementById('filterDateFrom').value;
+    const filtroFechaHasta = document.getElementById('filterDateTo').value;
     
-    let transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+    let transacciones = JSON.parse(localStorage.getItem('transacciones') || '[]');
     
     // Aplicar filtros
-    if (filterType) {
-        transactions = transactions.filter(t => t.type === filterType);
+    if (filtroTipo) {
+        transacciones = transacciones.filter(t => t.type === filtroTipo);
     }
     
-    if (filterCategory) {
-        transactions = transactions.filter(t => t.category === filterCategory);
+    if (filtroCategoria) {
+        transacciones = transacciones.filter(t => t.category === filtroCategoria);
     }
     
-    if (filterDateFrom) {
-        transactions = transactions.filter(t => t.date >= filterDateFrom);
+    if (filtroFechaDesde) {
+        transacciones = transacciones.filter(t => t.date >= filtroFechaDesde);
     }
     
-    if (filterDateTo) {
-        transactions = transactions.filter(t => t.date <= filterDateTo);
+    if (filtroFechaHasta) {
+        transacciones = transacciones.filter(t => t.date <= filtroFechaHasta);
     }
     
     // Mostrar transacciones filtradas
-    displayTransactionsHorizontal(transactions);
+    displaytransaccionesHorizontal(transacciones);
 }
 
 // Limpiar filtros
-function clearFilters() {
+function limpiarFiltros() {
     document.getElementById('filterType').value = '';
     document.getElementById('filterCategory').value = '';
     document.getElementById('filterDateFrom').value = '';
     document.getElementById('filterDateTo').value = '';
     
     // Mostrar todas las transacciones
-    loadTransactions();
+    cargarTodasLasTransacciones();
 }
 
 // Mostrar transacciones en formato simple y ordenado
-function displayTransactionsHorizontal(transactions) {
-    const container = document.getElementById('transactionsList');
+function displaytransaccionesHorizontal(transacciones) {
+    const container = document.getElementById('transaccionesList');
     
-    if (!transactions || transactions.length === 0) {
+    if (!transacciones || transacciones.length === 0) {
         container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-secondary);"><p>No hay transacciones registradas</p></div>';
         return;
     }
     
     // Ordenar por fecha (más recientes primero)
-    transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+    transacciones.sort((a, b) => new Date(b.date) - new Date(a.date));
     
     // Obtener icono según el tipo
     const getIcon = (type) => {
@@ -317,7 +313,7 @@ function displayTransactionsHorizontal(transactions) {
     
     let html = '';
     
-    transactions.forEach(transaction => {
+    transacciones.forEach(transaction => {
         const isPositive = transaction.type === 'ingreso';
         const amountClass = isPositive ? 'positive' : 'negative';
         const amountSign = isPositive ? '+' : '-';
@@ -352,7 +348,7 @@ function displayTransactionsHorizontal(transactions) {
 // Obtener nombre de la tarjeta
 function getCardName(cardId) {
     const card = getCardById(cardId);
-    return card ? card.name : 'Tarjeta desconocida';
+    return card ? card.alias : 'Tarjeta desconocida';
 }
 
 // Formatear fecha
@@ -361,24 +357,14 @@ function formatDate(dateString) {
     return date.toLocaleDateString('es-CL');
 }
 
-// Modificar la función loadTransactions para usar el nuevo formato
-function loadTransactions() {
-    try {
-        const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
-        displayTransactionsHorizontal(transactions);
-    } catch (error) {
-        console.error('Error al cargar transacciones:', error);
-        document.getElementById('transactionsList').innerHTML = '<p class="text-center text-muted">Error al cargar transacciones</p>';
-    }
-}
 
 // Crear datos de ejemplo si no existen transacciones
 function createSampleData() {
     try {
-        const existingTransactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+        const existingtransacciones = JSON.parse(localStorage.getItem('transacciones') || '[]');
         
-        if (existingTransactions.length === 0) {
-            const sampleTransactions = [
+        if (existingtransacciones.length === 0) {
+            const sampletransacciones = [
                 {
                     id: Date.now() + 1,
                     type: 'ingreso',
@@ -423,8 +409,8 @@ function createSampleData() {
                 }
             ];
             
-            localStorage.setItem('transactions', JSON.stringify(sampleTransactions));
-            loadTransactions(); // Recargar para mostrar los datos de ejemplo
+            localStorage.setItem('transacciones', JSON.stringify(sampletransacciones));
+            cargarTodasLasTransacciones(); // Recargar para mostrar los datos de ejemplo
         }
     } catch (error) {
         console.error('Error al crear datos de ejemplo:', error);
